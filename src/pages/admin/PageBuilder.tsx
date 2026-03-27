@@ -94,7 +94,7 @@ export default function PageBuilder() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const initialLoadRef = useRef(true);
 
   const [pageSettings, setPageSettings] = useState({

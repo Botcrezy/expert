@@ -53,8 +53,8 @@ export function EnhancedVideoPlayer({
   const containerRef = useRef<HTMLDivElement>(null);
   const ytPlayerRef = useRef<any>(null);
   const ytContainerRef = useRef<HTMLDivElement>(null);
-  const hideControlsTimeout = useRef<NodeJS.Timeout>();
-  const progressInterval = useRef<NodeJS.Timeout>();
+  const hideControlsTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const progressInterval = useRef<ReturnType<typeof setInterval>>();
 
   // Extract YouTube video ID
   const getYouTubeId = (url?: string | null) => {
