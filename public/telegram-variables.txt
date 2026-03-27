@@ -1,0 +1,124 @@
+# Telegram Template Variables (Sity Experts)
+
+هذا الملف مرجع سريع لمتغيرات رسائل تيليجرام في المنصة.
+يتم تعريف المتغيرات داخل قاعدة البيانات في جدول: telegram_template_variables.
+
+صيغة الاستخدام داخل نص الرسالة:
+  {variable_name}
+
+مثال:
+  مرحباً {client_name}، تم إنشاء طلبك رقم {request_number}
+
+ملاحظة مهمة:
+- القيم الفعلية تأتي من البيانات المُرسلة مع كل أكشن. أي متغير غير موجود في البيانات لن يتم استبداله.
+- بعض الرسائل تدعم أيضاً صيغة {{variable_name}} حسب إعدادات الرسائل.
+
+------------------------------------------------------------
+1) العميل (client)
+------------------------------------------------------------
+request_created:
+  - {request_number} رقم الطلب
+  - {title} عنوان الطلب
+  - {size} حجم الطلب
+  - {credits_cost} قيمة الكريديت
+
+request_approved:
+  - {request_number}
+  - {title}
+
+request_assigned:
+  - {request_number}
+  - {title}
+
+request_in_progress:
+  - {request_number}
+  - {title}
+
+request_delivered:
+  - {request_number}
+  - {title}
+
+request_completed:
+  - {request_number}
+  - {title}
+
+request_cancelled:
+  - {request_number}
+  - {title}
+  - {reason} سبب الإلغاء
+
+------------------------------------------------------------
+2) الفريلانسر (freelancer)
+------------------------------------------------------------
+task_assigned:
+  - {title} عنوان المهمة
+  - {request_number} رقم الطلب
+  - {deadline} الموعد النهائي
+  - {payment_amount} مبلغ المهمة
+
+delivery_submitted:
+  - {title}
+  - {request_number}
+
+qc_approved:
+  - {title}
+  - {payment_amount}
+
+qc_rejected:
+  - {title}
+  - {qc_notes} ملاحظات الجودة
+
+withdrawal_approved:
+  - {amount} قيمة السحب
+  - {method} طريقة السحب
+
+withdrawal_rejected:
+  - {amount}
+  - {reason}
+
+------------------------------------------------------------
+3) الأدمن (admin)
+------------------------------------------------------------
+admin_user_registered_client:
+  - {user_name} اسم المستخدم
+  - {user_email} بريد المستخدم
+  - {admin_url} رابط لوحة التحكم
+
+admin_user_registered_freelancer:
+  - {user_name}
+  - {user_email}
+  - {admin_url}
+
+admin_identity_submitted_client:
+  - {full_name} الاسم
+  - {national_id} الرقم القومي
+  - {admin_url}
+
+admin_identity_submitted_freelancer:
+  - {full_name}
+  - {national_id}
+  - {admin_url}
+
+admin_withdrawal_requested:
+  - {freelancer_name} اسم الفريلانسر
+  - {amount} قيمة السحب
+  - {method} طريقة السحب
+  - {admin_url}
+
+admin_delivery_pending_qc:
+  - {request_number} رقم الطلب
+  - {title} عنوان المهمة/الطلب
+  - {freelancer_name} اسم الفريلانسر
+  - {admin_url}
+
+admin_request_created:
+  - {request_number}
+  - {title}
+  - {client_name} اسم العميل
+  - {admin_url}
+
+------------------------------------------------------------
+4) رسائل مخصصة (all)
+------------------------------------------------------------
+custom:
+  - {message} نص الرسالة

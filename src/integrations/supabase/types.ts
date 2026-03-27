@@ -2510,7 +2510,6 @@ export type Database = {
           id: string
           images: Json
           is_active: boolean | null
-          portfolio_picture: string | null
           price_egp: number
           requirements: Json
           revisions_included: number | null
@@ -2531,7 +2530,6 @@ export type Database = {
           id?: string
           images?: Json
           is_active?: boolean | null
-          portfolio_picture?: string | null
           price_egp: number
           requirements?: Json
           revisions_included?: number | null
@@ -2552,7 +2550,6 @@ export type Database = {
           id?: string
           images?: Json
           is_active?: boolean | null
-          portfolio_picture?: string | null
           price_egp?: number
           requirements?: Json
           revisions_included?: number | null

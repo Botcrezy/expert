@@ -1,1 +1,43 @@
-project_id = "looszeychdnjutraogpv"
+project_id = "spporrunrkkzzrpcjrbp"
+
+[functions.activate-free-plan]
+verify_jwt = false
+
+[functions.admin-mark-order-paid]
+verify_jwt = false
+
+[functions.admin-users]
+verify_jwt = false
+
+[functions.create-payment-collection]
+verify_jwt = false
+
+[functions.create-request]
+verify_jwt = false
+
+[functions.generate-invoice]
+verify_jwt = false
+
+[functions.kashier-payment]
+verify_jwt = false
+
+[functions.payment-collection-webhook]
+verify_jwt = false
+
+[functions.release-payment-collection-funds]
+verify_jwt = false
+
+[functions.setup-admin]
+verify_jwt = false
+
+[functions.suggest-task-price]
+verify_jwt = false
+
+[functions.telegram-send]
+verify_jwt = false
+
+[functions.telegram-setup]
+verify_jwt = false
+
+[functions.telegram-webhook]
+verify_jwt = false
