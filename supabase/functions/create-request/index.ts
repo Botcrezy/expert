@@ -66,8 +66,8 @@ serve(async (req) => {
     // Generate idempotency key if not provided (based on user + timestamp + title hash)
     const idempKey = idempotency_key || `${user.id}-${Date.now()}-${title.substring(0, 20)}`;
 
-    // Call the DB function that handles everything transactionally
-    const { data: requestData, error: rpcError } = await supabaseAdmin.rpc(
+    // Call the DB function using user's client so auth.uid() is available
+    const { data: requestData, error: rpcError } = await supabaseUser.rpc(
       "create_request_with_credits",
       {
         p_user_id: user.id,
