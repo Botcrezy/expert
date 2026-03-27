@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.bulk-create-requests]
 verify_jwt = false
+
+[functions.update-requests-details]
+verify_jwt = false
