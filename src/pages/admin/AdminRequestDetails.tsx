@@ -68,7 +68,13 @@ export default function AdminRequestDetails() {
     min_price: number;
     max_price: number;
     reasoning: string;
+    complexity_level?: string;
+    estimated_hours?: number;
+    source?: string;
   } | null>(null);
+  const [isAiPricing, setIsAiPricing] = useState(false);
+  const [suggestedFreelancers, setSuggestedFreelancers] = useState<any[]>([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [showNeedsInfoDialog, setShowNeedsInfoDialog] = useState(false);
   const [needsInfoText, setNeedsInfoText] = useState("");
   const [needsInfoFiles, setNeedsInfoFiles] = useState<any[]>([]);
