@@ -68,7 +68,13 @@ export default function AdminRequestDetails() {
     min_price: number;
     max_price: number;
     reasoning: string;
+    complexity_level?: string;
+    estimated_hours?: number;
+    source?: string;
   } | null>(null);
+  const [isAiPricing, setIsAiPricing] = useState(false);
+  const [suggestedFreelancers, setSuggestedFreelancers] = useState<any[]>([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [showNeedsInfoDialog, setShowNeedsInfoDialog] = useState(false);
   const [needsInfoText, setNeedsInfoText] = useState("");
   const [needsInfoFiles, setNeedsInfoFiles] = useState<any[]>([]);
@@ -1139,7 +1145,7 @@ export default function AdminRequestDetails() {
                 {((request.credits_cost || 0) * (pricingSettings?.creditToEgp || 50)).toLocaleString("ar-EG")} ج.م
               </span>
             </div>
-            <div className="grid gap-2 sm:grid-cols-[1fr_auto] items-center">
+            <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto] items-center">
               <div>
                 <Label className="text-xs text-muted-foreground mb-1 block">سعر الفريلانسر (ج.م)</Label>
                 <Input
@@ -1166,18 +1172,133 @@ export default function AdminRequestDetails() {
                     taskTitle: request.title,
                     taskDescription: request.description || "",
                   });
-                  setSmartPricing(result);
+                  setSmartPricing({ ...result, source: "local" });
                   setCustomPaymentAmount(result.suggested_price);
                   toast({ title: "تم اقتراح سعر ذكي للمهمة" });
                 }}
               >
-                اقتراح سعر ذكي
+                تسعير خوارزمي
+              </Button>
+              <Button
+                type="button"
+                variant="default"
+                size="sm"
+                className="mt-6"
+                disabled={isAiPricing}
+                onClick={async () => {
+                  setIsAiPricing(true);
+                  try {
+                    const { data, error } = await supabase.functions.invoke("ai-smart-pricing", {
+                      body: { requestId: id },
+                    });
+                    if (error) throw error;
+                    if (data?.error) throw new Error(data.error);
+                    setSmartPricing({ ...data, source: "ai" });
+                    setCustomPaymentAmount(data.suggested_price);
+                    toast({ title: "🤖 تم اقتراح سعر ذكي بالـ AI" });
+                  } catch (err: any) {
+                    console.error("AI pricing error:", err);
+                    toast({ title: "خطأ في التسعير الذكي", description: err.message, variant: "destructive" });
+                  } finally {
+                    setIsAiPricing(false);
+                  }
+                }}
+              >
+                {isAiPricing ? <Loader2 className="w-4 h-4 animate-spin" /> : "🤖 تسعير AI"}
               </Button>
             </div>
             {smartPricing && (
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {smartPricing.reasoning}
-              </p>
+              <div className="space-y-2 bg-background rounded-md p-3 border">
+                <div className="flex items-center gap-2">
+                  <Badge variant={smartPricing.source === "ai" ? "default" : "secondary"}>
+                    {smartPricing.source === "ai" ? "🤖 AI" : "⚡ خوارزمي"}
+                  </Badge>
+                  <span className="text-lg font-bold text-primary">{smartPricing.suggested_price} ج.م</span>
+                </div>
+                <div className="flex gap-4 text-xs text-muted-foreground">
+                  <span>الحد الأدنى: {smartPricing.min_price} ج.م</span>
+                  <span>الحد الأقصى: {smartPricing.max_price} ج.م</span>
+                </div>
+                {smartPricing.complexity_level && (
+                  <div className="flex gap-4 text-xs">
+                    <span>التعقيد: <strong>{smartPricing.complexity_level}</strong></span>
+                    {smartPricing.estimated_hours && (
+                      <span>الوقت المتوقع: <strong>{smartPricing.estimated_hours} ساعة</strong></span>
+                    )}
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {smartPricing.reasoning}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Auto-suggest freelancers */}
+          <div className="mb-4">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="w-full"
+              disabled={isLoadingSuggestions}
+              onClick={async () => {
+                setIsLoadingSuggestions(true);
+                try {
+                  const { data, error } = await supabase.functions.invoke("suggest-freelancer-assignment", {
+                    body: { requestId: id },
+                  });
+                  if (error) throw error;
+                  if (data?.error) throw new Error(data.error);
+                  setSuggestedFreelancers(data.suggestions || []);
+                  toast({ title: `🎯 تم اقتراح ${data.suggestions?.length || 0} فريلانسر` });
+                } catch (err: any) {
+                  console.error("Suggest assignment error:", err);
+                  toast({ title: "خطأ في اقتراح التعيين", description: err.message, variant: "destructive" });
+                } finally {
+                  setIsLoadingSuggestions(false);
+                }
+              }}
+            >
+              {isLoadingSuggestions ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Users className="w-4 h-4 ml-2" />}
+              🎯 اقتراح تعيين تلقائي
+            </Button>
+            {suggestedFreelancers.length > 0 && (
+              <div className="mt-3 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">الاقتراحات الذكية:</p>
+                {suggestedFreelancers.map((s: any, idx: number) => (
+                  <div
+                    key={s.user_id}
+                    onClick={() => setSelectedFreelancer(s.user_id)}
+                    className={`p-3 border rounded-lg cursor-pointer transition-all text-sm ${
+                      selectedFreelancer === s.user_id
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">#{idx + 1}</Badge>
+                        <span className="font-medium">{s.name}</span>
+                        {s.category_match && <Badge variant="secondary" className="text-xs">متخصص</Badge>}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Star className="w-3 h-3 text-yellow-500" />
+                        <span>{s.stars}</span>
+                        <span>•</span>
+                        <span>{s.completed_tasks} مهمة</span>
+                        <span>•</span>
+                        <span>{s.active_tasks} نشطة</span>
+                      </div>
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {s.reasons.map((r: string, i: number) => (
+                        <Badge key={i} variant="outline" className="text-xs">{r}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
           {request.categories && (

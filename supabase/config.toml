@@ -47,3 +47,9 @@ verify_jwt = false
 
 [functions.update-requests-details]
 verify_jwt = false
+
+[functions.ai-smart-pricing]
+verify_jwt = false
+
+[functions.suggest-freelancer-assignment]
+verify_jwt = false

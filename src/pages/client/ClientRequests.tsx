@@ -77,6 +77,21 @@ export default function ClientRequests() {
     };
   }, [user, paymentSuccess, orderIdFromUrl, navigate, toast]);
 
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+
+  // Fetch categories for filter
+  const { data: categories = [] } = useQuery({
+    queryKey: ["client-categories"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("categories")
+        .select("id, name_ar")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true });
+      return data || [];
+    },
+  });
+
   const { data: requests = [], isLoading, error: requestsError } = useQuery({
     queryKey: ["client-all-requests", user?.id],
     queryFn: async () => {
@@ -131,8 +146,11 @@ export default function ClientRequests() {
       (statusFilter === "active" && !["completed", "cancelled"].includes(request.status)) ||
       (statusFilter === "completed" && request.status === "completed") ||
       (statusFilter === "cancelled" && request.status === "cancelled");
+
+    const matchesCategory =
+      categoryFilter === "all" || request.category_id === categoryFilter;
     
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
   const activeCount = requests.filter(r => !["completed", "cancelled"].includes(r.status)).length;
@@ -231,6 +249,19 @@ export default function ClientRequests() {
               <SelectItem value="active">نشطة</SelectItem>
               <SelectItem value="completed">مكتملة</SelectItem>
               <SelectItem value="cancelled">ملغية</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="التخصص" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">كل التخصصات</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id}>
+                  {cat.name_ar}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
