@@ -136,7 +136,7 @@ export default function ClientCheckout() {
 
   // Start polling when payment window is opened
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (paymentWindowOpened && pendingOrderId && !pollingPayment) {
       setPollingPayment(true);
       interval = setInterval(async () => {
