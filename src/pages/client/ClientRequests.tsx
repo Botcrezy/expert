@@ -146,8 +146,11 @@ export default function ClientRequests() {
       (statusFilter === "active" && !["completed", "cancelled"].includes(request.status)) ||
       (statusFilter === "completed" && request.status === "completed") ||
       (statusFilter === "cancelled" && request.status === "cancelled");
+
+    const matchesCategory =
+      categoryFilter === "all" || request.category_id === categoryFilter;
     
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
   const activeCount = requests.filter(r => !["completed", "cancelled"].includes(r.status)).length;
