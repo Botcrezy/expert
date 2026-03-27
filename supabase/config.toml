@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.telegram-webhook]
 verify_jwt = false
+
+[functions.bulk-create-requests]
+verify_jwt = false
