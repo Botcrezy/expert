@@ -251,6 +251,19 @@ export default function ClientRequests() {
               <SelectItem value="cancelled">ملغية</SelectItem>
             </SelectContent>
           </Select>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="التخصص" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">كل التخصصات</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id}>
+                  {cat.name_ar}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <Button asChild>
           <Link to="/client/create-request">
