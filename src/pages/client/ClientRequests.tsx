@@ -77,6 +77,21 @@ export default function ClientRequests() {
     };
   }, [user, paymentSuccess, orderIdFromUrl, navigate, toast]);
 
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+
+  // Fetch categories for filter
+  const { data: categories = [] } = useQuery({
+    queryKey: ["client-categories"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("categories")
+        .select("id, name_ar")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true });
+      return data || [];
+    },
+  });
+
   const { data: requests = [], isLoading, error: requestsError } = useQuery({
     queryKey: ["client-all-requests", user?.id],
     queryFn: async () => {
