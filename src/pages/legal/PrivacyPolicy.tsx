@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
 
   return (
     <>
-      <SEO title={`سياسة الخصوصية | ${siteName}`} description={`سياسة الخصوصية وحماية البيانات لمنصة ${siteName}`} />
+      <SEO title={`سياسة الخصوصية | ${siteName}`} description={`سياسة الخصوصية وحماية البيانات لمنصة ${siteName}`} path="/privacy" />
       <DynamicNavbar />
       <main className="min-h-screen bg-background" dir="rtl">
         <div className="bg-gradient-to-b from-primary/5 to-background border-b">

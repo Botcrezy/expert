@@ -11,7 +11,7 @@ export default function RefundPolicy() {
 
   return (
     <>
-      <SEO title={`سياسة الاسترداد | ${siteName}`} description={`سياسة الاسترداد والإرجاع لمنصة ${siteName}`} />
+      <SEO title={`سياسة الاسترداد | ${siteName}`} description={`سياسة الاسترداد والإرجاع لمنصة ${siteName}`} path="/refund-policy" />
       <DynamicNavbar />
       <main className="min-h-screen bg-background" dir="rtl">
         <div className="bg-gradient-to-b from-primary/5 to-background border-b">

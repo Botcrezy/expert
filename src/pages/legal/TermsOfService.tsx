@@ -11,7 +11,7 @@ export default function TermsOfService() {
 
   return (
     <>
-      <SEO title={`شروط الاستخدام | ${siteName}`} description={`شروط وأحكام استخدام منصة ${siteName} للخدمات المُدارة`} />
+      <SEO title={`شروط الاستخدام | ${siteName}`} description={`شروط وأحكام استخدام منصة ${siteName} للخدمات المُدارة`} path="/terms" />
       <DynamicNavbar />
       <main className="min-h-screen bg-background" dir="rtl">
         {/* Hero */}
