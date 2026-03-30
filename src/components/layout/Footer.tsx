@@ -70,8 +70,13 @@ export function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-gray-800 pt-8 text-center">
-          <p>© {new Date().getFullYear()} {settings?.siteName || "Sity Experts"}. جميع الحقوق محفوظة.</p>
+        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-gray-400">© {new Date().getFullYear()} {settings?.siteName || "Sity Experts"}. جميع الحقوق محفوظة.</p>
+          <div className="flex items-center gap-4 text-sm">
+            <Link to="/terms" className="hover:text-white transition-colors">الشروط والأحكام</Link>
+            <Link to="/privacy" className="hover:text-white transition-colors">سياسة الخصوصية</Link>
+            <Link to="/refund-policy" className="hover:text-white transition-colors">سياسة الاسترداد</Link>
+          </div>
         </div>
       </div>
     </footer>
