@@ -227,7 +227,8 @@ export default function FreelancerWallet() {
                         type="number"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value)}
-                        placeholder="الحد الأدنى 100 ج.م"
+                        placeholder="الحد الأدنى 5,100 ج.م"
+                        min={5100}
                         max={currentBalance}
                       />
                     </div>
