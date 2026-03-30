@@ -21,6 +21,9 @@ const FreelancersPage = lazy(() => import("./pages/FreelancersPage"));
 const PublicRequestView = lazy(() => import("./pages/PublicRequestView"));
 const PaymentCollection = lazy(() => import("./pages/PaymentCollection"));
 const PublicPortfolio = lazy(() => import("./pages/PublicPortfolio"));
+const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
+const RefundPolicy = lazy(() => import("./pages/legal/RefundPolicy"));
 
 const DynamicPage = lazy(() => import("./pages/DynamicPage"));
 const CMSPage = lazy(() => import("./pages/CMSPage"));
