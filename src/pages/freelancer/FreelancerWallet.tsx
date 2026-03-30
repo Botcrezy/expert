@@ -277,8 +277,17 @@ export default function FreelancerWallet() {
                 </p>
               )}
 
+              {/* Central Bank Policy Notice */}
+              <div className="p-3 rounded-lg bg-warning/10 border border-warning/20">
+                <p className="text-xs font-semibold text-warning mb-1">⚠️ سياسة الحد الأدنى للسحب</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  وفقاً لتعليمات البنك المركزي المصري والتشديدات على تحويلات العمل الحر، الحد الأدنى للسحب هو <span className="font-bold text-foreground">100$ (ما يعادل 5,100 ج.م)</span>. 
+                  هذا أفضل من منصات مثل مستقل التي تشترط حد أدنى 250$ للسحب البنكي.
+                </p>
+              </div>
+
               <p className="text-xs text-muted-foreground text-center">
-                الحد الأدنى للسحب 100 ج.م • يتم المعالجة خلال 24-48 ساعة
+                يتم معالجة طلبات السحب خلال 24-48 ساعة عمل
               </p>
             </div>
 
