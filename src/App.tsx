@@ -21,6 +21,9 @@ const FreelancersPage = lazy(() => import("./pages/FreelancersPage"));
 const PublicRequestView = lazy(() => import("./pages/PublicRequestView"));
 const PaymentCollection = lazy(() => import("./pages/PaymentCollection"));
 const PublicPortfolio = lazy(() => import("./pages/PublicPortfolio"));
+const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
+const RefundPolicy = lazy(() => import("./pages/legal/RefundPolicy"));
 
 const DynamicPage = lazy(() => import("./pages/DynamicPage"));
 const CMSPage = lazy(() => import("./pages/CMSPage"));
@@ -172,6 +175,9 @@ const App = () => (
               <Route path="/share/request/:token" element={<PublicRequestView />} />
               <Route path="/pay/:token" element={<PaymentCollection />} />
               <Route path="/u/:slug" element={<PublicPortfolio />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/refund-policy" element={<RefundPolicy />} />
 
               {/* Explicit 404 route (prevents redirect loop from DynamicCMSPage) */}
               <Route path="/404" element={<NotFound />} />

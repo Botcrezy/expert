@@ -318,12 +318,15 @@ export const DynamicFooter = forwardRef<HTMLElement, Record<string, never>>(func
               <span className="hidden sm:inline">جميع الحقوق محفوظة.</span>
               <Heart className="w-4 h-4 text-primary mx-1 inline" />
             </p>
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-4 sm:gap-6 text-sm text-muted-foreground flex-wrap">
+              <Link to="/terms" className="hover:text-primary transition-colors">
+                الشروط والأحكام
+              </Link>
               <Link to="/privacy" className="hover:text-primary transition-colors">
                 سياسة الخصوصية
               </Link>
-              <Link to="/terms" className="hover:text-primary transition-colors">
-                الشروط والأحكام
+              <Link to="/refund-policy" className="hover:text-primary transition-colors">
+                سياسة الاسترداد
               </Link>
               <Button
                 variant="ghost"
