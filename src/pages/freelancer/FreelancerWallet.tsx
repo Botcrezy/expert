@@ -101,7 +101,7 @@ export default function FreelancerWallet() {
 
       const amount = parseFloat(withdrawAmount);
       if (amount > currentBalance) throw new Error("الرصيد غير كافي");
-      if (amount < 100) throw new Error("الحد الأدنى للسحب 100 ج.م");
+      if (amount < 5100) throw new Error("الحد الأدنى للسحب 5,100 ج.م (ما يعادل 100 دولار) وفقاً لسياسات البنك المركزي المصري");
 
       const { data, error } = await supabase
         .from("withdrawals")
