@@ -101,7 +101,7 @@ export default function FreelancerWallet() {
 
       const amount = parseFloat(withdrawAmount);
       if (amount > currentBalance) throw new Error("الرصيد غير كافي");
-      if (amount < 100) throw new Error("الحد الأدنى للسحب 100 ج.م");
+      if (amount < 5100) throw new Error("الحد الأدنى للسحب 5,100 ج.م (ما يعادل 100 دولار) وفقاً لسياسات البنك المركزي المصري");
 
       const { data, error } = await supabase
         .from("withdrawals")
@@ -211,7 +211,7 @@ export default function FreelancerWallet() {
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full" disabled={currentBalance < 100 || withdrawalMethods.length === 0}>
+                  <Button className="w-full" disabled={currentBalance < 5100 || withdrawalMethods.length === 0}>
                     <ArrowUpRight className="w-4 h-4" />
                     طلب سحب
                   </Button>
@@ -227,7 +227,8 @@ export default function FreelancerWallet() {
                         type="number"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value)}
-                        placeholder="الحد الأدنى 100 ج.م"
+                        placeholder="الحد الأدنى 5,100 ج.م"
+                        min={5100}
                         max={currentBalance}
                       />
                     </div>
@@ -276,8 +277,17 @@ export default function FreelancerWallet() {
                 </p>
               )}
 
+              {/* Central Bank Policy Notice */}
+              <div className="p-3 rounded-lg bg-warning/10 border border-warning/20">
+                <p className="text-xs font-semibold text-warning mb-1">⚠️ سياسة الحد الأدنى للسحب</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  وفقاً لتعليمات البنك المركزي المصري والتشديدات على تحويلات العمل الحر، الحد الأدنى للسحب هو <span className="font-bold text-foreground">100$ (ما يعادل 5,100 ج.م)</span>. 
+                  هذا أفضل من منصات مثل مستقل التي تشترط حد أدنى 250$ للسحب البنكي.
+                </p>
+              </div>
+
               <p className="text-xs text-muted-foreground text-center">
-                الحد الأدنى للسحب 100 ج.م • يتم المعالجة خلال 24-48 ساعة
+                يتم معالجة طلبات السحب خلال 24-48 ساعة عمل
               </p>
             </div>
 
