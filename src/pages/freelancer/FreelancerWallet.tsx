@@ -211,7 +211,7 @@ export default function FreelancerWallet() {
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full" disabled={currentBalance < 100 || withdrawalMethods.length === 0}>
+                  <Button className="w-full" disabled={currentBalance < 5100 || withdrawalMethods.length === 0}>
                     <ArrowUpRight className="w-4 h-4" />
                     طلب سحب
                   </Button>
