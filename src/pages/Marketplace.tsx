@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { DynamicNavbar, FloatingNavBar } from "@/components/layout/DynamicNavbar";
+import { DynamicNavbar } from "@/components/layout/DynamicNavbar";
 import { DynamicFooter } from "@/components/layout/DynamicFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
