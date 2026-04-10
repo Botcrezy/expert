@@ -18,6 +18,8 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const FreelancersPage = lazy(() => import("./pages/FreelancersPage"));
+const Marketplace = lazy(() => import("./pages/Marketplace"));
+const MarketplaceRequestDetails = lazy(() => import("./pages/MarketplaceRequestDetails"));
 const PublicRequestView = lazy(() => import("./pages/PublicRequestView"));
 const PaymentCollection = lazy(() => import("./pages/PaymentCollection"));
 const PublicPortfolio = lazy(() => import("./pages/PublicPortfolio"));
@@ -119,6 +121,7 @@ const AdminActionCenter = lazy(() => import("./pages/admin/AdminActionCenter"));
 const AdminNotificationRules = lazy(() => import("./pages/admin/AdminNotificationRules"));
 const AdminFixedAgreements = lazy(() => import("./pages/admin/AdminFixedAgreements"));
 const AdminPortfolios = lazy(() => import("./pages/admin/AdminPortfolios"));
+const AdminProposals = lazy(() => import("./pages/admin/AdminProposals"));
 
 // Freelancer pages
 const FreelancerLogin = lazy(() => import("./pages/freelancer/FreelancerLogin"));
@@ -146,6 +149,7 @@ const FreelancerStudio = lazy(() => import("./pages/freelancer/FreelancerStudio"
 const FreelancerIdentityVerification = lazy(() => import("./pages/freelancer/FreelancerIdentityVerification"));
 const FreelancerTrackDetails = lazy(() => import("./pages/freelancer/FreelancerTrackDetails"));
 const FreelancerCourseViewer = lazy(() => import("./pages/freelancer/FreelancerCourseViewer"));
+const FreelancerProposals = lazy(() => import("./pages/freelancer/FreelancerProposals"));
 
 const queryClient = new QueryClient();
 
@@ -172,6 +176,8 @@ const App = () => (
               <Route path="/how-it-works" element={<CMSPage slug="how-it-works" fallbackComponent={HowItWorks} />} />
               <Route path="/faq" element={<CMSPage slug="faq" fallbackComponent={FAQ} />} />
               <Route path="/freelancers" element={<FreelancersPage />} />
+              <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/marketplace/:id" element={<MarketplaceRequestDetails />} />
               <Route path="/share/request/:token" element={<PublicRequestView />} />
               <Route path="/pay/:token" element={<PaymentCollection />} />
               <Route path="/u/:slug" element={<PublicPortfolio />} />
