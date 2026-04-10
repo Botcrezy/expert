@@ -4203,37 +4203,19 @@ export type Database = {
       }
       freelancer_public_profiles: {
         Row: {
+          avatar_url: string | null
           bio: string | null
           categories: string[] | null
           completed_tasks: number | null
           display_id: string | null
+          experience: string | null
+          full_name: string | null
           id: string | null
           is_available: boolean | null
           is_verified: boolean | null
+          portfolio_slug: string | null
           rating: number | null
           skills: Json | null
-        }
-        Insert: {
-          bio?: string | null
-          categories?: string[] | null
-          completed_tasks?: number | null
-          display_id?: never
-          id?: string | null
-          is_available?: boolean | null
-          is_verified?: boolean | null
-          rating?: number | null
-          skills?: Json | null
-        }
-        Update: {
-          bio?: string | null
-          categories?: string[] | null
-          completed_tasks?: number | null
-          display_id?: never
-          id?: string | null
-          is_available?: boolean | null
-          is_verified?: boolean | null
-          rating?: number | null
-          skills?: Json | null
         }
         Relationships: []
       }
