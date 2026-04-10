@@ -105,7 +105,7 @@ export default function Marketplace() {
         path="/marketplace"
       />
       <DynamicNavbar />
-      <FloatingNavBar />
+      
 
       <main className="py-8 md:py-14">
         <div className="container mx-auto px-4">
