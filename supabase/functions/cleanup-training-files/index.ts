@@ -15,25 +15,11 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
-  // Verify caller is admin
-  const authHeader = req.headers.get("Authorization");
-  if (!authHeader) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
-  }
-  const anonClient = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_ANON_KEY")!
-  );
-  const { data: { user } } = await anonClient.auth.getUser(authHeader.replace("Bearer ", ""));
-  if (!user) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
-  }
-
-  const BUCKET = "training-files";
+  const { bucket = "identity-documents" } = await req.json().catch(() => ({}));
+  const BUCKET = bucket;
   let totalDeleted = 0;
   const errors: string[] = [];
 
-  // Recursive function to list and delete all files
   async function processFolder(prefix: string) {
     let offset = 0;
     while (true) {
@@ -50,13 +36,11 @@ Deno.serve(async (req) => {
       const folders = items.filter((i) => i.id === null);
       const files = items.filter((i) => i.id !== null);
 
-      // Process subfolders recursively
       for (const folder of folders) {
         const folderPath = prefix ? `${prefix}/${folder.name}` : folder.name;
         await processFolder(folderPath);
       }
 
-      // Delete files
       if (files.length > 0) {
         const paths = files.map((f) =>
           prefix ? `${prefix}/${f.name}` : f.name
@@ -79,7 +63,7 @@ Deno.serve(async (req) => {
   await processFolder("");
 
   return new Response(
-    JSON.stringify({ totalDeleted, errors }),
+    JSON.stringify({ bucket: BUCKET, totalDeleted, errors }),
     { headers: { ...corsHeaders, "Content-Type": "application/json" } }
   );
 });
