@@ -3,67 +3,65 @@
 # خطة التطوير والتحسين
 
 ## ملخص
-4 مهام رئيسية: حذف ملفات التدريب من Storage، تحسين responsive، نشر البورتفوليوهات تلقائياً، وتحسين صفحة الفريلانسرز العامة مع ربط البورتفوليو.
+تم تنفيذ: نظام Marketplace كامل مع صفحة عامة للمشاريع، نظام عروض الفريلانسرز، تحسين صفحة الخبراء، وتعديل إنشاء الطلبات.
 
 ---
 
-## 1. حذف ملفات التاسكات التدريبية من Storage
+## ✅ 1. صفحة الماركت بلايس (`/marketplace`)
 
-**الوضع الحالي:** bucket اسمه `training-files` فيه 311 ملف بحجم 162 MB.
+- صفحة عامة تعرض مشاريع العملاء المتاحة للتقديم
+- كل كارت يعرض: عنوان المشروع، التصنيف، الحجم، تاريخ النشر
+- لا يعرض بيانات العميل (حماية الخصوصية)
+- فلاتر بحث حسب الاسم والتصنيف
 
-**الخطة:**
-- تشغيل سكريبت يحذف كل الملفات من bucket `training-files` باستخدام Supabase Storage API
-- يتم على دفعات (100 ملف في كل مرة) لتجنب timeout
+## ✅ 2. صفحة تفاصيل المشروع (`/marketplace/:id`)
 
----
+- عرض تفاصيل المشروع كاملة
+- نموذج تقديم عرض (خطاب تقديم، سعر مقترح، مدة)
+- حماية: فقط الفريلانسرز يمكنهم التقديم
 
-## 2. نشر كل البورتفوليوهات تلقائياً
+## ✅ 3. نظام العروض (Proposals)
 
-**الوضع الحالي:**
-- 27 بورتفوليو في حالة `draft`، 55 في حالة `published`
-- يوجد trigger حالي ينشر البورتفوليو عند الموافقة على الهوية أو تفعيل `is_public`
-- لكنه يشترط أن الهوية تكون مُوافق عليها
+- جدول `marketplace_proposals` مع RLS
+- صفحة الأدمن لإدارة العروض (`/admin/proposals`)
+- صفحة الفريلانسر لعرض عروضه (`/freelancer/proposals`)
 
-**الخطة:**
-- تحديث كل البورتفوليوهات الحالية إلى `status = 'published'` و `is_public = true`
-- إنشاء trigger جديد: عند إنشاء أي بورتفوليو جديد (INSERT)، يتم نشره مباشرة بدون شرط التحقق من الهوية
-- تعديل trigger التحديث الحالي لإزالة شرط الهوية
+## ✅ 4. تحسين صفحة الخبراء (`/freelancers`)
 
----
+- تصميم احترافي بصور cover من البورتفوليو
+- فلاتر حسب التصنيف والتقييم
+- ربط مباشر بالبورتفوليو
 
-## 3. تحسين صفحة الفريلانسرز العامة (`/freelancers`)
+## ✅ 5. تعديل إنشاء الطلب
 
-**الوضع الحالي:** الصفحة تعرض كروت بسيطة بدون صور أو رابط للبورتفوليو.
+- إضافة خيار `publish_mode` (منصة أو ماركت بلايس)
+- تحديث Edge Function لدعم publish_mode
 
-**التحسينات:**
-- عرض صورة الفريلانسر (avatar) من جدول `profiles`
-- إضافة زر "عرض البورتفوليو" يوجه لصفحة `/u/{slug}`
-- إضافة زر "اطلب خدمة" يوجه لإنشاء طلب
-- جلب بيانات البورتفوليو (slug) لربطها بكل فريلانسر
-- تحسين التصميم للموبايل (grid يتحول لعمود واحد)
+## ✅ 6. تحديث الـ Navigation
 
----
-
-## 4. إصلاح مشاكل Responsive
-
-**الخطة:**
-- مراجعة وإصلاح الصفحات الرئيسية: Index, FreelancersPage, PublicPortfolio, ClientRequests, FreelancerDashboard
-- التأكد من أن الجداول تعمل بـ horizontal scroll على الموبايل
-- إصلاح الـ padding والـ spacing في الشاشات الصغيرة
-- التأكد من أن الـ sidebar يعمل بشكل صحيح على الموبايل
+- إضافة روابط الماركت بلايس والخبراء في الـ Navbar
+- إضافة "عروضي" في sidebar الفريلانسر
+- إضافة "عروض الماركت بلايس" في sidebar الأدمن
 
 ---
 
-## التفاصيل التقنية
+## الملفات المتأثرة
 
-### الملفات المتأثرة:
-- `src/pages/FreelancersPage.tsx` — تحسين الكروت وإضافة ربط البورتفوليو
-- Migration SQL جديد — trigger لنشر البورتفوليو تلقائياً + تحديث البيانات الحالية
-- سكريبت حذف ملفات training-files عبر Storage API
-- صفحات متعددة لإصلاح responsive
+### جديدة:
+- `src/pages/Marketplace.tsx`
+- `src/pages/MarketplaceRequestDetails.tsx`
+- `src/pages/admin/AdminProposals.tsx`
+- `src/pages/freelancer/FreelancerProposals.tsx`
+
+### معدلة:
+- `src/pages/FreelancersPage.tsx`
+- `src/pages/client/CreateRequest.tsx`
+- `src/App.tsx`
+- `src/components/layout/DynamicNavbar.tsx`
+- `src/components/layout/FreelancerSidebar.tsx`
+- `src/components/layout/AdminSidebar.tsx`
+- `supabase/functions/create-request/index.ts`
 
 ### قاعدة البيانات:
-- UPDATE على `freelancer_portfolios` لنشر الـ drafts
-- Trigger جديد على INSERT لنشر البورتفوليو فوراً
-- تعديل trigger `auto_publish_portfolio_on_public_toggle` لإزالة شرط الهوية
-
+- `requests.publish_mode` (عمود جديد)
+- `marketplace_proposals` (جدول جديد مع RLS)
