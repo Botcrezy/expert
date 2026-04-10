@@ -170,7 +170,7 @@ const App = () => (
             >
               <Routes>
               {/* Public CMS routes */}
-              <Route path="/" element={<CMSPage slug="home" fallbackComponent={Index} />} />
+              <Route path="/" element={<Marketplace />} />
               <Route path="/services" element={<CMSPage slug="services" fallbackComponent={Services} />} />
               <Route path="/pricing" element={<CMSPage slug="pricing" fallbackComponent={Pricing} />} />
               <Route path="/how-it-works" element={<CMSPage slug="how-it-works" fallbackComponent={HowItWorks} />} />
