@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/hooks/useTheme";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { VerificationGuard } from "@/components/VerificationGuard";
 import { HelmetProvider } from "react-helmet-async";
+import { FloatingNavBar } from "@/components/layout/DynamicNavbar";
 
 // Code-splitting for better PageSpeed scores (reduce initial JS)
 const Index = lazy(() => import("./pages/Index"));
@@ -161,6 +162,7 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
+            <FloatingNavBar />
             <Suspense
               fallback={
                 <div className="min-h-[50vh] flex items-center justify-center text-sm text-muted-foreground">
