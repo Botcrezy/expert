@@ -3169,6 +3169,7 @@ export type Database = {
           credits_cost: number
           deadline: string | null
           description: string | null
+          estimated_budget: number | null
           files: Json | null
           id: string
           idempotency_key: string | null
@@ -3194,6 +3195,7 @@ export type Database = {
           credits_cost?: number
           deadline?: string | null
           description?: string | null
+          estimated_budget?: number | null
           files?: Json | null
           id?: string
           idempotency_key?: string | null
@@ -3219,6 +3221,7 @@ export type Database = {
           credits_cost?: number
           deadline?: string | null
           description?: string | null
+          estimated_budget?: number | null
           files?: Json | null
           id?: string
           idempotency_key?: string | null
@@ -4354,6 +4357,7 @@ export type Database = {
           credits_cost: number
           deadline: string | null
           description: string | null
+          estimated_budget: number | null
           files: Json | null
           id: string
           idempotency_key: string | null
