@@ -42,6 +42,7 @@ const menuItems = [
       { title: "المهام المعلقة", url: "/freelancer/pending", icon: Clock },
       { title: "مهامي", url: "/freelancer/tasks", icon: ClipboardList },
       { title: "طلبات خدماتي", url: "/freelancer/service-orders", icon: Briefcase },
+      { title: "عروضي", url: "/freelancer/proposals", icon: Briefcase },
       { title: "التسليمات", url: "/freelancer/deliveries", icon: Package },
     ]
   },

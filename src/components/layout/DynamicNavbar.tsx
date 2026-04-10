@@ -93,6 +93,8 @@ export const DynamicNavbar = forwardRef<HTMLElement, Record<string, never>>(func
   const defaultNavItems = [
     { label_ar: "الخدمات", url: "/services", visibility: "all" },
     { label_ar: "الأسعار", url: "/pricing", visibility: "all" },
+    { label_ar: "الماركت بلايس", url: "/marketplace", visibility: "all" },
+    { label_ar: "الخبراء", url: "/freelancers", visibility: "all" },
     { label_ar: "كيف نعمل", url: "/how-it-works", visibility: "all" },
     { label_ar: "الأسئلة الشائعة", url: "/faq", visibility: "all" },
   ];
