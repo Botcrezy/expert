@@ -5,15 +5,17 @@ import { DynamicFooter } from "@/components/layout/DynamicFooter";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Star, Search, CheckCircle2, Briefcase } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Star, Search, CheckCircle2, Briefcase, ExternalLink, Send } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { SEO } from "@/components/seo/SEO";
 
 export default function FreelancersPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Use the secure view instead of the table
   const { data: freelancers = [], isLoading } = useQuery({
     queryKey: ["public-freelancers"],
     queryFn: async () => {
@@ -28,7 +30,6 @@ export default function FreelancersPage() {
     },
   });
 
-  // Fetch categories for display
   const { data: categories = [] } = useQuery({
     queryKey: ["categories-for-freelancers"],
     queryFn: async () => {
@@ -46,10 +47,13 @@ export default function FreelancersPage() {
   };
 
   const filteredFreelancers = freelancers.filter((f: any) => {
+    const name = f.full_name || "";
     const bio = f.bio || "";
     const skills = JSON.stringify(f.skills || []);
-    return bio.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           skills.toLowerCase().includes(searchTerm.toLowerCase());
+    const term = searchTerm.toLowerCase();
+    return name.toLowerCase().includes(term) ||
+           bio.toLowerCase().includes(term) ||
+           skills.toLowerCase().includes(term);
   });
 
   return (
@@ -61,22 +65,22 @@ export default function FreelancersPage() {
       />
       <DynamicNavbar />
 
-      <main className="py-16">
+      <main className="py-10 md:py-16">
         <div className="container mx-auto px-4">
           {/* Header */}
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h1 className="text-4xl font-bold text-foreground mb-4">فريق الخبراء</h1>
-            <p className="text-muted-foreground text-lg">
+          <div className="text-center max-w-2xl mx-auto mb-8 md:mb-12">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3 md:mb-4">فريق الخبراء</h1>
+            <p className="text-muted-foreground text-base md:text-lg">
               تصفح قائمة المحترفين المتميزين واختر الأنسب لمشروعك
             </p>
           </div>
 
           {/* Search */}
-          <div className="max-w-md mx-auto mb-12">
+          <div className="max-w-md mx-auto mb-8 md:mb-12">
             <div className="relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
-                placeholder="ابحث عن مهارة أو تخصص..."
+                placeholder="ابحث عن اسم، مهارة أو تخصص..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pr-10"
@@ -86,11 +90,11 @@ export default function FreelancersPage() {
 
           {/* Freelancers Grid */}
           {isLoading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Card key={i} className="p-6">
-                  <Skeleton className="w-20 h-20 rounded-full mx-auto mb-4" />
-                  <Skeleton className="h-6 w-32 mx-auto mb-2" />
+                <Card key={i} className="p-5 md:p-6">
+                  <Skeleton className="w-16 h-16 md:w-20 md:h-20 rounded-full mx-auto mb-4" />
+                  <Skeleton className="h-5 w-28 mx-auto mb-2" />
                   <Skeleton className="h-4 w-full mb-4" />
                   <div className="flex gap-2 justify-center">
                     <Skeleton className="h-6 w-16" />
@@ -105,24 +109,34 @@ export default function FreelancersPage() {
               <p className="text-muted-foreground">لا يوجد خبراء متاحون حالياً</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {filteredFreelancers.map((freelancer: any) => (
-                <Card key={freelancer.id} className="p-6 hover:shadow-lg transition-shadow">
-                  {/* Avatar - using display_id for anonymity */}
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <span className="text-3xl font-bold text-primary">
-                      {freelancer.bio?.charAt(0)?.toUpperCase() || "X"}
-                    </span>
-                  </div>
+                <Card key={freelancer.id} className="p-5 md:p-6 hover:shadow-lg transition-shadow flex flex-col">
+                  {/* Avatar */}
+                  <Avatar className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3">
+                    {freelancer.avatar_url ? (
+                      <AvatarImage src={freelancer.avatar_url} alt={freelancer.full_name || "خبير"} />
+                    ) : null}
+                    <AvatarFallback className="text-xl md:text-2xl font-bold bg-primary/10 text-primary">
+                      {(freelancer.full_name || freelancer.bio || "X").charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  {/* Name */}
+                  {freelancer.full_name && (
+                    <h3 className="text-center font-semibold text-foreground mb-1 text-sm md:text-base">
+                      {freelancer.full_name}
+                    </h3>
+                  )}
 
                   {/* Verified Badge */}
                   <div className="flex items-center justify-center gap-1 text-emerald-600 mb-2">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span className="text-sm font-medium">خبير موثق</span>
+                    <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                    <span className="text-xs md:text-sm font-medium">خبير موثق</span>
                   </div>
 
-                  {/* Bio - Safe to show */}
-                  <p className="text-center text-muted-foreground text-sm mb-4 line-clamp-2">
+                  {/* Bio */}
+                  <p className="text-center text-muted-foreground text-xs md:text-sm mb-3 line-clamp-2">
                     {freelancer.bio || "خبير محترف"}
                   </p>
 
@@ -133,10 +147,10 @@ export default function FreelancersPage() {
                     </p>
                   )}
 
-                  {/* Stats - Safe public data */}
-                  <div className="flex items-center justify-center gap-4 mb-4 text-sm">
+                  {/* Stats */}
+                  <div className="flex items-center justify-center gap-4 mb-3 text-xs md:text-sm">
                     <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <Star className="w-3.5 h-3.5 md:w-4 md:h-4 fill-yellow-400 text-yellow-400" />
                       <span className="font-medium">{freelancer.rating || 0}</span>
                     </div>
                     <div className="text-muted-foreground">
@@ -146,25 +160,43 @@ export default function FreelancersPage() {
 
                   {/* Categories */}
                   {freelancer.categories && freelancer.categories.length > 0 && (
-                    <div className="flex flex-wrap justify-center gap-2 mb-4">
+                    <div className="flex flex-wrap justify-center gap-1.5 mb-3">
                       {freelancer.categories.slice(0, 3).map((catId: string) => (
-                        <Badge key={catId} variant="secondary" className="text-xs">
+                        <Badge key={catId} variant="secondary" className="text-[10px] md:text-xs">
                           {getCategoryName(catId)}
                         </Badge>
                       ))}
                     </div>
                   )}
 
-                  {/* Skills - Safe to show */}
+                  {/* Skills */}
                   {freelancer.skills && Array.isArray(freelancer.skills) && freelancer.skills.length > 0 && (
-                    <div className="flex flex-wrap justify-center gap-1">
+                    <div className="flex flex-wrap justify-center gap-1 mb-4">
                       {(freelancer.skills as string[]).slice(0, 4).map((skill: string, i: number) => (
-                        <Badge key={i} variant="outline" className="text-xs">
+                        <Badge key={i} variant="outline" className="text-[10px] md:text-xs">
                           {skill}
                         </Badge>
                       ))}
                     </div>
                   )}
+
+                  {/* Action Buttons */}
+                  <div className="mt-auto flex flex-col sm:flex-row gap-2 pt-2">
+                    {freelancer.portfolio_slug && (
+                      <Button variant="outline" size="sm" className="flex-1 text-xs" asChild>
+                        <Link to={`/u/${freelancer.portfolio_slug}`}>
+                          <ExternalLink className="w-3.5 h-3.5 ml-1" />
+                          عرض البورتفوليو
+                        </Link>
+                      </Button>
+                    )}
+                    <Button size="sm" className="flex-1 text-xs" asChild>
+                      <Link to="/client/create-request">
+                        <Send className="w-3.5 h-3.5 ml-1" />
+                        اطلب خدمة
+                      </Link>
+                    </Button>
+                  </div>
                 </Card>
               ))}
             </div>
