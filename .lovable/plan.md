@@ -1,98 +1,67 @@
 
 
-# خطة تطوير المنصة: Marketplace + تحسين صفحة الفريلانسرز
+# خطة التطوير والتحسين
 
 ## ملخص
-3 محاور رئيسية: تحسين صفحة الفريلانسرز العامة، إنشاء صفحة Marketplace عامة للمشاريع، وإضافة نظام تقديم الفريلانسرز على المشاريع.
+تم تنفيذ: نظام Marketplace كامل مع صفحة عامة للمشاريع، نظام عروض الفريلانسرز، تحسين صفحة الخبراء، وتعديل إنشاء الطلبات.
 
 ---
 
-## 1. تحسين صفحة الفريلانسرز العامة (`/freelancers`)
+## ✅ 1. صفحة الماركت بلايس (`/marketplace`)
 
-**الوضع الحالي:** صفحة بسيطة بكروت تعرض اسم وبايو ومهارات فقط.
+- صفحة عامة تعرض مشاريع العملاء المتاحة للتقديم
+- كل كارت يعرض: عنوان المشروع، التصنيف، الحجم، تاريخ النشر
+- لا يعرض بيانات العميل (حماية الخصوصية)
+- فلاتر بحث حسب الاسم والتصنيف
 
-**التحسينات:**
-- تحويل الكروت لتصميم احترافي أكبر يعرض: صورة cover، عدد المشاريع في البورتفوليو، عدد الخدمات المتاحة
-- إضافة فلاتر حسب التصنيف (categories) والتقييم
-- عند الضغط على كارت فريلانسر، يفتح صفحة البورتفوليو `/u/{slug}` مباشرة
-- جلب بيانات إضافية: عدد المشاريع (`portfolio_projects`) وعدد الخدمات (`portfolio_services`) لكل فريلانسر
+## ✅ 2. صفحة تفاصيل المشروع (`/marketplace/:id`)
 
----
+- عرض تفاصيل المشروع كاملة
+- نموذج تقديم عرض (خطاب تقديم، سعر مقترح، مدة)
+- حماية: فقط الفريلانسرز يمكنهم التقديم
 
-## 2. صفحة Marketplace العامة (`/marketplace`)
+## ✅ 3. نظام العروض (Proposals)
 
-**الفكرة:** صفحة عامة تعرض مشاريع العملاء المتاحة للتقديم (مثل مستقل/Upwork).
+- جدول `marketplace_proposals` مع RLS
+- صفحة الأدمن لإدارة العروض (`/admin/proposals`)
+- صفحة الفريلانسر لعرض عروضه (`/freelancer/proposals`)
 
-**التنفيذ:**
-- إضافة عمود `publish_mode` لجدول `requests` بقيم: `'platform'` (يروح للمنصة مباشرة) أو `'marketplace'` (ينشر في الماركت بلايس)
-- إنشاء صفحة `/marketplace` عامة تعرض الطلبات اللي `publish_mode = 'marketplace'` و `status = 'submitted'`
-- كل كارت يعرض: عنوان المشروع، التصنيف، الحجم، الميزانية التقديرية، تاريخ النشر
-- لا يعرض اسم العميل أو بياناته (حماية الخصوصية)
-- زر "قدّم على المشروع" يفتح dialog للفريلانسر المسجل
+## ✅ 4. تحسين صفحة الخبراء (`/freelancers`)
 
----
+- تصميم احترافي بصور cover من البورتفوليو
+- فلاتر حسب التصنيف والتقييم
+- ربط مباشر بالبورتفوليو
 
-## 3. نظام تقديم الفريلانسرز (Proposals)
+## ✅ 5. تعديل إنشاء الطلب
 
-**التنفيذ:**
-- إنشاء جدول `marketplace_proposals` يحتوي:
-  - `request_id`, `freelancer_id`, `cover_letter`, `proposed_price`, `proposed_days`, `status`, `created_at`
-- عند إنشاء طلب جديد، العميل يختار: "إرسال للمنصة" أو "نشر في الماركت بلايس"
-- الفريلانسر يقدر يقدم عرض (proposal) على أي مشروع في الماركت بلايس
-- الأدمن يشوف العروض ويختار الأنسب ويعمل assignment
-- إضافة صفحة للأدمن لإدارة العروض
+- إضافة خيار `publish_mode` (منصة أو ماركت بلايس)
+- تحديث Edge Function لدعم publish_mode
 
----
+## ✅ 6. تحديث الـ Navigation
 
-## 4. تعديل صفحة إنشاء الطلب
-
-**التعديل في `CreateRequest.tsx`:**
-- إضافة خطوة أو خيار في الـ wizard: "كيف تريد نشر طلبك؟"
-  - خيار 1: "إرسال للمنصة" (السلوك الحالي)
-  - خيار 2: "نشر في الماركت بلايس" (الفريلانسرز يقدموا عليه)
+- إضافة روابط الماركت بلايس والخبراء في الـ Navbar
+- إضافة "عروضي" في sidebar الفريلانسر
+- إضافة "عروض الماركت بلايس" في sidebar الأدمن
 
 ---
 
-## التفاصيل التقنية
+## الملفات المتأثرة
 
-### قاعدة البيانات (Migrations):
-```sql
--- 1. إضافة publish_mode للطلبات
-ALTER TABLE requests ADD COLUMN publish_mode text NOT NULL DEFAULT 'platform'
-  CHECK (publish_mode IN ('platform', 'marketplace'));
+### جديدة:
+- `src/pages/Marketplace.tsx`
+- `src/pages/MarketplaceRequestDetails.tsx`
+- `src/pages/admin/AdminProposals.tsx`
+- `src/pages/freelancer/FreelancerProposals.tsx`
 
--- 2. جدول العروض
-CREATE TABLE marketplace_proposals (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  request_id uuid REFERENCES requests(id) ON DELETE CASCADE NOT NULL,
-  freelancer_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  cover_letter text,
-  proposed_price numeric,
-  proposed_days integer,
-  status text NOT NULL DEFAULT 'pending',
-  admin_notes text,
-  created_at timestamptz DEFAULT now(),
-  updated_at timestamptz DEFAULT now(),
-  UNIQUE(request_id, freelancer_id)
-);
+### معدلة:
+- `src/pages/FreelancersPage.tsx`
+- `src/pages/client/CreateRequest.tsx`
+- `src/App.tsx`
+- `src/components/layout/DynamicNavbar.tsx`
+- `src/components/layout/FreelancerSidebar.tsx`
+- `src/components/layout/AdminSidebar.tsx`
+- `supabase/functions/create-request/index.ts`
 
-ALTER TABLE marketplace_proposals ENABLE ROW LEVEL SECURITY;
-
--- RLS: فريلانسر يشوف عروضه فقط، أدمن يشوف الكل
--- Public: أي حد يشوف الطلبات marketplace فقط (بدون بيانات العميل)
-```
-
-### الملفات الجديدة:
-- `src/pages/Marketplace.tsx` — صفحة الماركت بلايس العامة
-- `src/pages/MarketplaceRequestDetails.tsx` — تفاصيل مشروع + نموذج التقديم
-- `src/pages/admin/AdminProposals.tsx` — إدارة العروض للأدمن
-- `src/pages/freelancer/FreelancerProposals.tsx` — عروض الفريلانسر
-
-### الملفات المعدلة:
-- `src/pages/FreelancersPage.tsx` — تحسين التصميم + فلاتر
-- `src/pages/client/CreateRequest.tsx` — إضافة خيار publish_mode
-- `src/App.tsx` — إضافة الراوتات الجديدة
-- `src/components/layout/DynamicNavbar.tsx` — إضافة رابط "الماركت بلايس"
-- `src/components/layout/FreelancerSidebar.tsx` — إضافة رابط "عروضي"
-- `src/components/layout/AdminSidebar.tsx` — إضافة رابط "العروض"
-
+### قاعدة البيانات:
+- `requests.publish_mode` (عمود جديد)
+- `marketplace_proposals` (جدول جديد مع RLS)

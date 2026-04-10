@@ -85,7 +85,8 @@ export default function CreateRequest() {
     size: "small",
     deadline: "",
     files: [] as UploadedFile[],
-    goals: [""] as string[], // Array of goals
+    goals: [""] as string[],
+    publish_mode: "platform" as "platform" | "marketplace",
   });
   const [uploading, setUploading] = useState(false);
   const [showNextStepsModal, setShowNextStepsModal] = useState(false);
@@ -406,6 +407,7 @@ export default function CreateRequest() {
           size: formData.size,
           deadline: formData.deadline || null,
           files: formData.files,
+          publish_mode: formData.publish_mode,
         },
       });
 
@@ -1026,6 +1028,45 @@ export default function CreateRequest() {
                 </Card>
               </div>
             </div>
+
+            {/* Publish Mode Selection */}
+            <Card className="mt-4">
+              <CardHeader>
+                <CardTitle>طريقة النشر</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setFormData((prev) => ({ ...prev, publish_mode: "platform" as const }))}
+                    className={cn(
+                      "p-4 rounded-xl border-2 text-right transition-all",
+                      formData.publish_mode === "platform"
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/30"
+                    )}
+                  >
+                    <h4 className="font-semibold text-foreground mb-1">إرسال للمنصة</h4>
+                    <p className="text-xs text-muted-foreground">
+                      سيتم تعيين فريلانسر من فريق المنصة مباشرة
+                    </p>
+                  </button>
+                  <button
+                    onClick={() => setFormData((prev) => ({ ...prev, publish_mode: "marketplace" as const }))}
+                    className={cn(
+                      "p-4 rounded-xl border-2 text-right transition-all",
+                      formData.publish_mode === "marketplace"
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/30"
+                    )}
+                  >
+                    <h4 className="font-semibold text-foreground mb-1">نشر في الماركت بلايس</h4>
+                    <p className="text-xs text-muted-foreground">
+                      الفريلانسرز يقدمون عروضهم ويتم اختيار الأنسب
+                    </p>
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
 
             <div className="flex justify-between items-center pt-4 border-t mt-4">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">

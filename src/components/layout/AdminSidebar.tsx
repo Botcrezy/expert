@@ -63,6 +63,7 @@ const menuItems = [
     group: "إدارة الطلبات",
     items: [
       { title: "قائمة الطلبات", url: "/admin/requests/queue", icon: FileText },
+      { title: "عروض الماركت بلايس", url: "/admin/proposals", icon: Briefcase },
       { title: "الاتفاقات الثابتة", url: "/admin/fixed-agreements", icon: Briefcase },
       { title: "التعيينات", url: "/admin/assignments", icon: UserCheck },
       { title: "مراجعة الجودة", url: "/admin/qc", icon: ClipboardCheck },

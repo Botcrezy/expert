@@ -1866,6 +1866,53 @@ export type Database = {
           },
         ]
       }
+      marketplace_proposals: {
+        Row: {
+          admin_notes: string | null
+          cover_letter: string | null
+          created_at: string | null
+          freelancer_id: string
+          id: string
+          proposed_days: number | null
+          proposed_price: number | null
+          request_id: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          cover_letter?: string | null
+          created_at?: string | null
+          freelancer_id: string
+          id?: string
+          proposed_days?: number | null
+          proposed_price?: number | null
+          request_id: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          cover_letter?: string | null
+          created_at?: string | null
+          freelancer_id?: string
+          id?: string
+          proposed_days?: number | null
+          proposed_price?: number | null
+          request_id?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_proposals_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           attachments: Json | null
@@ -3129,6 +3176,7 @@ export type Database = {
           portfolio_service_id: string | null
           preferred_freelancer_id: string | null
           priority: string | null
+          publish_mode: string
           request_number: string
           service_addons_snapshot: Json
           size: Database["public"]["Enums"]["task_size"]
@@ -3153,6 +3201,7 @@ export type Database = {
           portfolio_service_id?: string | null
           preferred_freelancer_id?: string | null
           priority?: string | null
+          publish_mode?: string
           request_number: string
           service_addons_snapshot?: Json
           size?: Database["public"]["Enums"]["task_size"]
@@ -3177,6 +3226,7 @@ export type Database = {
           portfolio_service_id?: string | null
           preferred_freelancer_id?: string | null
           priority?: string | null
+          publish_mode?: string
           request_number?: string
           service_addons_snapshot?: Json
           size?: Database["public"]["Enums"]["task_size"]
@@ -4311,6 +4361,7 @@ export type Database = {
           portfolio_service_id: string | null
           preferred_freelancer_id: string | null
           priority: string | null
+          publish_mode: string
           request_number: string
           service_addons_snapshot: Json
           size: Database["public"]["Enums"]["task_size"]
