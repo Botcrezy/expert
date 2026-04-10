@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, ArrowRight, Sparkles, Shield, Clock } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, Sparkles, Shield, Clock, LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
@@ -18,10 +18,8 @@ export default function Login() {
   const { signIn, userRole, user } = useAuth();
   const { data: settings } = usePlatformSettings();
 
-  // Redirect based on role when user is authenticated
   useEffect(() => {
     if (user && userRole) {
-      // Resume pending service purchase (saved from public portfolio) for clients
       const pending = sessionStorage.getItem("pending_service_purchase");
       if (userRole === "client" && pending) {
         try {
@@ -29,117 +27,81 @@ export default function Login() {
           const service = parsed?.service;
           const freelancerId = parsed?.freelancerId;
           if (service?.id && freelancerId) {
-            // We can't create DB rows in this effect without supabase imports here;
-            // Redirect to checkout and let it create the purchase intent.
             sessionStorage.setItem("pending_service_purchase", JSON.stringify({ ...parsed, userId: user.id }));
             navigate(`/client/checkout?resume=1`, { replace: true });
             return;
           }
-        } catch {
-          // ignore
-        }
+        } catch { /* ignore */ }
       }
-
       const roleRedirects: Record<string, string> = {
         client: "/client/dashboard",
         freelancer: "/freelancer/dashboard",
         admin: "/admin",
         team_leader: "/admin",
       };
-      const redirectPath = roleRedirects[userRole] || "/client/dashboard";
-      navigate(redirectPath, { replace: true });
+      navigate(roleRedirects[userRole] || "/client/dashboard", { replace: true });
     }
   }, [user, userRole, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!email || !password) {
-      toast({
-        title: "خطأ",
-        description: "يرجى إدخال البريد الإلكتروني وكلمة المرور",
-        variant: "destructive",
-      });
+      toast({ title: "خطأ", description: "يرجى إدخال البريد الإلكتروني وكلمة المرور", variant: "destructive" });
       return;
     }
-
     setLoading(true);
-    
     try {
       const { error } = await signIn(email, password);
-      
       if (error) {
         let errorMessage = "حدث خطأ في تسجيل الدخول";
-        if (error.message === "Invalid login credentials") {
-          errorMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة";
-        } else if (error.message.includes("Email not confirmed")) {
-          errorMessage = "يرجى تأكيد بريدك الإلكتروني أولاً";
-        }
-        
-        toast({
-          title: "خطأ في تسجيل الدخول",
-          description: errorMessage,
-          variant: "destructive",
-        });
+        if (error.message === "Invalid login credentials") errorMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+        else if (error.message.includes("Email not confirmed")) errorMessage = "يرجى تأكيد بريدك الإلكتروني أولاً";
+        toast({ title: "خطأ في تسجيل الدخول", description: errorMessage, variant: "destructive" });
         return;
       }
-      
-      toast({
-        title: "تم تسجيل الدخول بنجاح ✓",
-        description: "جاري تحويلك للوحة التحكم...",
-      });
+      toast({ title: "تم تسجيل الدخول بنجاح ✓", description: "جاري تحويلك للوحة التحكم..." });
     } catch (err: any) {
-      toast({
-        title: "خطأ",
-        description: err.message || "حدث خطأ غير متوقع",
-        variant: "destructive",
-      });
+      toast({ title: "خطأ", description: err.message || "حدث خطأ غير متوقع", variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen auth-neo auth-neo-bg flex flex-col lg:flex-row">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-background">
       {/* Mobile Header */}
-      <div className="lg:hidden p-4 flex items-center justify-between border-b border-border/50">
+      <div className="lg:hidden p-4 flex items-center justify-between border-b border-border/50 bg-background">
         <Link to="/" className="flex items-center gap-2">
           {settings?.logoUrl ? (
             <img src={settings.logoUrl} alt={settings.siteName} className="w-9 h-9 rounded-xl object-contain" />
           ) : (
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
               <span className="text-primary-foreground font-bold text-lg">{settings?.siteName?.charAt(0) || "S"}</span>
             </div>
           )}
-          <span className="font-bold text-lg">{settings?.siteName || "Sity Experts"}</span>
+          <span className="font-bold text-lg text-foreground">{settings?.siteName || "Sity Experts"}</span>
         </Link>
       </div>
 
       {/* Left Side - Form */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-12">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-8 lg:p-16">
         <div className="w-full max-w-md">
-          <Link 
-            to="/" 
-            className="hidden lg:inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-colors group"
-          >
+          <Link to="/" className="hidden lg:inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-10 transition-colors group text-sm">
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             العودة للرئيسية
           </Link>
-          
+
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3">
-              أهلاً بعودتك! 👋
-            </h1>
-            <p className="text-muted-foreground text-sm sm:text-base">
-              سجل دخولك للمتابعة والوصول لحسابك
-            </p>
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
+              <LogIn className="w-7 h-7 text-primary" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">أهلاً بعودتك! 👋</h1>
+            <p className="text-muted-foreground">سجل دخولك للمتابعة والوصول لحسابك</p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                البريد الإلكتروني
-              </Label>
+              <Label htmlFor="email" className="text-sm font-medium text-foreground">البريد الإلكتروني</Label>
               <Input
                 id="email"
                 type="email"
@@ -147,22 +109,15 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-12 sm:h-14 text-base auth-neo-input focus-visible:ring-ring transition-colors"
+                className="h-12 text-base rounded-xl bg-muted/50 border-border focus-visible:ring-primary"
                 dir="ltr"
               />
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-medium">
-                  كلمة المرور
-                </Label>
-                <Link 
-                  to="/forgot-password" 
-                  className="text-xs sm:text-sm text-primary hover:underline transition-colors"
-                >
-                  نسيت كلمة المرور؟
-                </Link>
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">كلمة المرور</Label>
+                <Link to="/forgot-password" className="text-xs text-primary hover:underline">نسيت كلمة المرور؟</Link>
               </div>
               <div className="relative">
                 <Input
@@ -172,95 +127,72 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                    className="h-12 sm:h-14 text-base auth-neo-input focus-visible:ring-ring transition-colors pl-12"
-                    dir="ltr"
+                  className="h-12 text-base rounded-xl bg-muted/50 border-border focus-visible:ring-primary pl-12"
+                  dir="ltr"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                >
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full h-12 sm:h-14 text-base font-semibold" 
-              loading={loading}
-              variant="hero"
-            >
+
+            <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl" loading={loading}>
               تسجيل الدخول
             </Button>
           </form>
-          
+
           <div className="mt-8">
             <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border/60"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-background text-muted-foreground">أو</span>
-              </div>
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border"></div></div>
+              <div className="relative flex justify-center text-sm"><span className="px-4 bg-background text-muted-foreground">أو</span></div>
             </div>
           </div>
-          
+
           <div className="mt-6 space-y-3">
-            <p className="text-center text-muted-foreground text-sm sm:text-base">
-              ما عندكش حساب؟
-            </p>
+            <p className="text-center text-muted-foreground text-sm">ما عندكش حساب؟</p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link to="/register" className="flex-1">
-                <Button variant="outline" className="w-full h-11 sm:h-12">
-                  تسجيل كعميل
-                </Button>
+                <Button variant="outline" className="w-full h-11 rounded-xl">تسجيل كعميل</Button>
               </Link>
               <Link to="/freelancer-register" className="flex-1">
-                <Button variant="secondary" className="w-full h-11 sm:h-12">
-                  انضم كفريلانسر
-                </Button>
+                <Button variant="secondary" className="w-full h-11 rounded-xl">انضم كفريلانسر</Button>
               </Link>
             </div>
           </div>
         </div>
       </div>
-      
-      {/* Right Side - Branding */}
-      <div className="hidden lg:flex flex-1 auth-neo-brand items-center justify-center p-12 relative overflow-hidden">
-        {/* Decorative Elements */}
-        <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-40 left-20 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 right-1/3 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
+
+      {/* Right Side - Branding Panel */}
+      <div className="hidden lg:flex flex-1 items-center justify-center p-12 relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent">
+        <div className="absolute inset-0">
+          <div className="absolute top-20 right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-32 left-16 w-56 h-56 bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 right-1/4 w-28 h-28 bg-white/8 rounded-full blur-2xl" />
         </div>
-        
-        <div className="max-w-lg text-center auth-neo-brand-content relative z-10">
+
+        <div className="max-w-lg text-center relative z-10">
           {settings?.logoUrl ? (
-            <img src={settings.logoUrl} alt={settings.siteName} className="w-24 h-24 mx-auto mb-10 object-contain auth-neo-brand-chip" />
+            <img src={settings.logoUrl} alt={settings.siteName} className="w-20 h-20 mx-auto mb-8 object-contain rounded-2xl bg-white/15 p-3 backdrop-blur-sm border border-white/20 shadow-2xl" />
           ) : (
-            <div className="w-24 h-24 rounded-3xl auth-neo-brand-badge flex items-center justify-center mx-auto mb-10 shadow-2xl">
-              <span className="text-5xl font-bold">{settings?.siteName?.charAt(0) || "S"}</span>
+            <div className="w-20 h-20 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center mx-auto mb-8 shadow-2xl">
+              <span className="text-white text-4xl font-bold">{settings?.siteName?.charAt(0) || "S"}</span>
             </div>
           )}
 
-          <h2 className="text-3xl xl:text-4xl font-bold mb-6">{settings?.siteName || "Sity Experts"}</h2>
-          <p className="text-lg xl:text-xl auth-neo-brand-lead mb-12 leading-relaxed">
-            منصة خدمات مُدارة تضمن لك جودة التسليم وراحة البال.
-            اطلب خدمتك واستلمها جاهزة.
-          </p>
+          <h2 className="text-3xl xl:text-4xl font-bold mb-4 text-white">{settings?.siteName || "Sity Experts"}</h2>
+          <p className="text-lg text-white/85 mb-10 leading-relaxed">منصة خدمات مُدارة تضمن لك جودة التسليم وراحة البال. اطلب خدمتك واستلمها جاهزة.</p>
 
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-3">
             {[
               { icon: Sparkles, text: "جودة مضمونة ومراجعة قبل التسليم" },
               { icon: Shield, text: "حماية كاملة للمشاريع والدفعات" },
               { icon: Clock, text: "دعم فني على مدار الساعة" },
-            ].map((feature, index) => (
-              <div key={index} className="auth-neo-brand-feature">
-                <div className="auth-neo-brand-icon">
-                  <feature.icon className="w-6 h-6" />
+            ].map((f, i) => (
+              <div key={i} className="flex items-center gap-4 rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/15 text-right hover:bg-white/15 transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+                  <f.icon className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-base font-semibold">{feature.text}</span>
+                <span className="text-white font-medium text-sm">{f.text}</span>
               </div>
             ))}
           </div>
