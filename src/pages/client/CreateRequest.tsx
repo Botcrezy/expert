@@ -85,7 +85,8 @@ export default function CreateRequest() {
     size: "small",
     deadline: "",
     files: [] as UploadedFile[],
-    goals: [""] as string[], // Array of goals
+    goals: [""] as string[],
+    publish_mode: "platform" as "platform" | "marketplace",
   });
   const [uploading, setUploading] = useState(false);
   const [showNextStepsModal, setShowNextStepsModal] = useState(false);
@@ -406,6 +407,7 @@ export default function CreateRequest() {
           size: formData.size,
           deadline: formData.deadline || null,
           files: formData.files,
+          publish_mode: formData.publish_mode,
         },
       });
 
