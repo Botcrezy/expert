@@ -164,15 +164,12 @@ export const DynamicFooter = forwardRef<HTMLElement, Record<string, never>>(func
   return (
     <footer
       ref={ref}
-      className={cn(
-        "relative border-t",
-        designVariant === "dark" ? "bg-gray-900 text-gray-100" : designVariant === "minimal" ? "bg-background" : "bg-gradient-to-b from-muted/30 to-muted/50"
-      )}
+      className="relative border-t border-border/50 bg-muted/30 pb-24"
     >
       {/* Decorative Top Border */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
