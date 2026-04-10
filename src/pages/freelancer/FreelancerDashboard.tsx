@@ -163,7 +163,7 @@ export default function FreelancerDashboard() {
       {/* Verification Alert */}
       <VerificationAlert status={getVerificationAlertStatus()} userType="freelancer" />
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
         <StatCard
           title="المهام النشطة"
           value={activeTasks.length}
@@ -218,7 +218,7 @@ export default function FreelancerDashboard() {
                   <Link 
                     key={assignment.id} 
                     to={`/freelancer/tasks/${assignment.id}`}
-                    className="flex items-center justify-between p-6 hover:bg-muted/50 transition-colors"
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-6 hover:bg-muted/50 transition-colors gap-2"
                   >
                     <div>
                       <div className="flex items-center gap-2 mb-1">
