@@ -49,6 +49,7 @@ serve(async (req) => {
       size,
       deadline,
       files,
+      publish_mode,
     } = body;
 
     if (!title || !size) {
@@ -97,6 +98,14 @@ serve(async (req) => {
         JSON.stringify({ error: rpcError.message || "Failed to create request" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    // Update publish_mode if marketplace
+    if (publish_mode === "marketplace" && requestData?.id) {
+      await supabaseAdmin
+        .from("requests")
+        .update({ publish_mode: "marketplace" })
+        .eq("id", requestData.id);
     }
 
     console.log(`Request created successfully: ${requestData?.request_number || requestId}`);
