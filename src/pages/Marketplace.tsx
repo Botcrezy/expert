@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { DynamicNavbar } from "@/components/layout/DynamicNavbar";
+import { DynamicNavbar, FloatingNavBar } from "@/components/layout/DynamicNavbar";
 import { DynamicFooter } from "@/components/layout/DynamicFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -105,6 +105,7 @@ export default function Marketplace() {
         path="/marketplace"
       />
       <DynamicNavbar />
+      <FloatingNavBar />
 
       <main className="py-8 md:py-14">
         <div className="container mx-auto px-4">
