@@ -346,3 +346,69 @@ export const DynamicNavbar = forwardRef<HTMLElement, Record<string, never>>(func
 });
 
 DynamicNavbar.displayName = "DynamicNavbar";
+
+/* ── Floating Secondary Navigation Bar ── */
+export function FloatingNavBar() {
+  const { user } = useAuth();
+  const [visible, setVisible] = useState(true);
+  const [lastY, setLastY] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setVisible(y < 100 || y < lastY);
+      setLastY(y);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [lastY]);
+
+  const links = [
+    { label: "سوق المشاريع", to: "/" },
+    { label: "الخبراء", to: "/freelancers" },
+    { label: "الخدمات", to: "/services" },
+    { label: "الأسعار", to: "/pricing" },
+    { label: "كيف نعمل", to: "/how-it-works" },
+  ];
+
+  return (
+    <div
+      className={cn(
+        "sticky top-[64px] lg:top-[80px] z-40 transition-all duration-300 border-b border-border/40",
+        "bg-background/80 backdrop-blur-md",
+        visible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+      )}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex items-center gap-1 h-10 overflow-x-auto scrollbar-hide">
+          {links.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors shrink-0"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <div className="mr-auto" />
+          {!user && (
+            <>
+              <Link
+                to="/login"
+                className="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors shrink-0"
+              >
+                تسجيل الدخول
+              </Link>
+              <Link
+                to="/register"
+                className="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shrink-0"
+              >
+                إنشاء حساب
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
