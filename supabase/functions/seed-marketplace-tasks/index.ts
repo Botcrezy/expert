@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   )
 
-  const clientUserId = '76096b98-29e0-418f-8528-d7e54ba0c852'
+  const clientUserId = '76096b98-e2d3-4a78-adac-88498932cdb1'
 
   const tasks = [
     {
