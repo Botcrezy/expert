@@ -758,6 +758,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/admin/proposals"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "team_leader"]}>
+                    <AdminProposals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/payment-collections"
                 element={
                   <ProtectedRoute allowedRoles={["admin"]}>
@@ -958,7 +966,14 @@ const App = () => (
                 }
               />
               <Route
-                path="/freelancer/messages"
+                path="/freelancer/proposals"
+                element={
+                  <ProtectedRoute allowedRoles={["freelancer"]}>
+                    <FreelancerProposals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 element={
                   <ProtectedRoute allowedRoles={["freelancer"]}>
                     <VerificationGuard userType="freelancer">
