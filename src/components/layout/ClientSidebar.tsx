@@ -34,6 +34,7 @@ import {
   GraduationCap,
   Package,
   Heart,
+  BarChart3,
 } from "lucide-react";
 
 const menuItems = [
@@ -46,6 +47,7 @@ const menuItems = [
       { title: "خدماتي المشتراة", url: "/client/purchased-services", icon: Package },
       { title: "ملفاتي", url: "/client/files", icon: FileStack },
       { title: "مفضلاتي", url: "/client/favorites", icon: Heart },
+      { title: "التحليلات", url: "/client/analytics", icon: BarChart3 },
     ]
   },
   {

@@ -62,6 +62,7 @@ const ClientReferrals = lazy(() => import("./pages/client/ClientReferrals"));
 const ClientBrand = lazy(() => import("./pages/client/ClientBrand"));
 const ClientBrandDetails = lazy(() => import("./pages/client/ClientBrandDetails"));
 const ClientFavorites = lazy(() => import("./pages/client/ClientFavorites"));
+const ClientAnalytics = lazy(() => import("./pages/client/ClientAnalytics"));
 
 // Admin pages
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -424,6 +425,17 @@ const App = () => (
                   <ProtectedRoute allowedRoles={["client"]}>
                     <VerificationGuard userType="client">
                       <ClientFavorites />
+                    </VerificationGuard>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/client/analytics"
+                element={
+                  <ProtectedRoute allowedRoles={["client"]}>
+                    <VerificationGuard userType="client">
+                      <ClientAnalytics />
                     </VerificationGuard>
                   </ProtectedRoute>
                 }
