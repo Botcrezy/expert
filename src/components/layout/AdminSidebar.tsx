@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
+import platformLogo from "@/assets/logo.jpg";
 import {
   Sidebar,
   SidebarContent,
@@ -150,19 +151,11 @@ export function AdminSidebar() {
     <Sidebar collapsible="icon" side="right">
       <SidebarHeader className="p-4 border-b border-sidebar-border">
         <NavLink to="/admin" className="flex items-center gap-3">
-          {settings?.logoUrl ? (
-            <img 
-              src={settings.logoUrl} 
-              alt={settings.siteName} 
-              className="w-10 h-10 rounded-xl object-contain shrink-0"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shrink-0">
-              <span className="text-primary-foreground font-bold text-lg">
-                {settings?.siteName?.charAt(0) || "S"}
-              </span>
-            </div>
-          )}
+          <img 
+            src={platformLogo} 
+            alt={settings?.siteName || "Sity Experts"} 
+            className="w-10 h-10 rounded-xl object-contain shrink-0"
+          />
           {!collapsed && (
             <div>
               <h1 className="font-bold text-lg">{settings?.siteName || "Sity Experts"}</h1>

@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
+import platformLogo from "@/assets/logo.jpg";
 import { useReferralTracking } from "@/hooks/useReferralTracking";
 import { 
   ArrowRight, 
@@ -281,13 +282,7 @@ export default function FreelancerRegister() {
       {/* Mobile Header */}
       <div className="lg:hidden p-4 flex items-center justify-between border-b border-border/50">
         <Link to="/" className="flex items-center gap-2">
-          {settings?.logoUrl ? (
-            <img src={settings.logoUrl} alt={settings.siteName} className="w-9 h-9 rounded-xl object-contain" />
-          ) : (
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
-              <span className="text-primary-foreground font-bold text-lg">{settings?.siteName?.charAt(0) || "S"}</span>
-            </div>
-          )}
+          <img src={platformLogo} alt={settings?.siteName || "Sity Experts"} className="w-9 h-9 rounded-xl object-contain" />
           <span className="font-bold text-lg">{settings?.siteName || "Sity Experts"}</span>
         </Link>
       </div>
@@ -624,13 +619,7 @@ export default function FreelancerRegister() {
         
         <div className="relative z-10 max-w-md auth-neo-brand-content">
           <Link to="/" className="flex items-center gap-3 mb-8">
-            {settings?.logoUrl ? (
-              <img src={settings.logoUrl} alt={settings.siteName} className="w-14 h-14 rounded-2xl object-contain auth-neo-brand-badge p-2" />
-            ) : (
-              <div className="w-14 h-14 rounded-2xl auth-neo-brand-badge flex items-center justify-center">
-                <span className="font-bold text-2xl">{settings?.siteName?.charAt(0) || "S"}</span>
-              </div>
-            )}
+            <img src={platformLogo} alt={settings?.siteName || "Sity Experts"} className="w-14 h-14 rounded-2xl object-contain auth-neo-brand-badge p-2" />
             <span className="font-bold text-2xl">{settings?.siteName || "Sity Experts"}</span>
           </Link>
           

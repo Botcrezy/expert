@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowRight, Sparkles, Shield, Clock, LogIn } from "lucide-
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
+import platformLogo from "@/assets/logo.jpg";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -72,13 +73,7 @@ export default function Login() {
       {/* Mobile Header */}
       <div className="lg:hidden p-4 flex items-center justify-between border-b border-border/50 bg-background">
         <Link to="/" className="flex items-center gap-2">
-          {settings?.logoUrl ? (
-            <img src={settings.logoUrl} alt={settings.siteName} className="w-9 h-9 rounded-xl object-contain" />
-          ) : (
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
-              <span className="text-primary-foreground font-bold text-lg">{settings?.siteName?.charAt(0) || "S"}</span>
-            </div>
-          )}
+          <img src={platformLogo} alt={settings?.siteName || "Sity Experts"} className="w-9 h-9 rounded-xl object-contain" />
           <span className="font-bold text-lg text-foreground">{settings?.siteName || "Sity Experts"}</span>
         </Link>
       </div>
@@ -171,13 +166,7 @@ export default function Login() {
         </div>
 
         <div className="max-w-lg text-center relative z-10">
-          {settings?.logoUrl ? (
-            <img src={settings.logoUrl} alt={settings.siteName} className="w-20 h-20 mx-auto mb-8 object-contain rounded-2xl bg-white/15 p-3 backdrop-blur-sm border border-white/20 shadow-2xl" />
-          ) : (
-            <div className="w-20 h-20 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center mx-auto mb-8 shadow-2xl">
-              <span className="text-white text-4xl font-bold">{settings?.siteName?.charAt(0) || "S"}</span>
-            </div>
-          )}
+          <img src={platformLogo} alt={settings?.siteName || "Sity Experts"} className="w-20 h-20 mx-auto mb-8 object-contain rounded-2xl bg-white/15 p-3 backdrop-blur-sm border border-white/20 shadow-2xl" />
 
           <h2 className="text-3xl xl:text-4xl font-bold mb-4 text-white">{settings?.siteName || "Sity Experts"}</h2>
           <p className="text-lg text-white/85 mb-10 leading-relaxed">منصة خدمات مُدارة تضمن لك جودة التسليم وراحة البال. اطلب خدمتك واستلمها جاهزة.</p>

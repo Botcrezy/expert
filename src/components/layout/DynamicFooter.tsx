@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import platformLogo from "@/assets/logo.jpg";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -174,19 +175,13 @@ export const DynamicFooter = forwardRef<HTMLElement, Record<string, never>>(func
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-6 group">
-              {settings?.logoUrl ? (
-                <img
-                  src={settings.logoUrl}
-                  alt={settings.siteName}
-                  className="w-12 h-12 rounded-2xl object-contain transition-transform group-hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/20 transition-transform group-hover:scale-105">
-                  <span className="text-primary-foreground font-bold text-xl">{settings?.siteName?.charAt(0) || "S"}</span>
-                </div>
-              )}
+              <img
+                src={platformLogo}
+                alt={settings?.siteName || "Sity Experts"}
+                className="w-12 h-12 rounded-2xl object-contain transition-transform group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+              />
               <span className="font-bold text-xl">{settings?.siteName || "Sity Experts"}</span>
             </Link>
             <p className="text-muted-foreground mb-6 leading-relaxed">

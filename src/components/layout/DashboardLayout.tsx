@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import platformLogo from "@/assets/logo.jpg";
 import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import {
   Search,
@@ -94,19 +95,11 @@ function DashboardContent({
               
               {/* Logo - Dynamic */}
               <Link to="/" className="hidden md:flex items-center gap-2 hover:opacity-80 transition-opacity">
-                {platformSettings?.logoUrl ? (
-                  <img 
-                    src={platformSettings.logoUrl} 
-                    alt={platformSettings.siteName} 
-                    className="w-8 h-8 rounded-lg object-contain"
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-sm">
-                      {platformSettings?.siteName?.charAt(0) || "S"}
-                    </span>
-                  </div>
-                )}
+                <img 
+                  src={platformLogo} 
+                  alt={platformSettings?.siteName || "Sity Experts"} 
+                  className="w-8 h-8 rounded-lg object-contain"
+                />
                 <span className="font-semibold text-foreground">
                   {platformSettings?.siteName || "Sity Experts"}
                 </span>

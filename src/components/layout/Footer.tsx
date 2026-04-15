@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
+import platformLogo from "@/assets/logo.jpg";
 
 export function Footer() {
   const { data: settings } = usePlatformSettings();
@@ -10,19 +11,11 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              {settings?.logoUrl ? (
-                <img 
-                  src={settings.logoUrl} 
-                  alt={settings?.siteName || "Sity Experts"} 
-                  className="w-10 h-10 rounded-xl object-contain"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
-                  <span className="text-white font-bold">
-                    {settings?.siteName?.charAt(0) || "S"}
-                  </span>
-                </div>
-              )}
+              <img 
+                src={platformLogo} 
+                alt={settings?.siteName || "Sity Experts"} 
+                className="w-10 h-10 rounded-xl object-contain"
+              />
               <span className="text-white font-bold text-xl">
                 {settings?.siteName || "Sity Experts"}
               </span>
