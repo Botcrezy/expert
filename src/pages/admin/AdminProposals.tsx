@@ -74,8 +74,12 @@ export default function AdminProposals() {
         .eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      toast({ title: "تم تحديث حالة العرض" });
+    onSuccess: (_, variables) => {
+      toast({ 
+        title: variables.status === "accepted" 
+          ? "✅ تم قبول العرض وتعيين الفريلانسر تلقائياً" 
+          : "تم تحديث حالة العرض" 
+      });
       queryClient.invalidateQueries({ queryKey: ["admin-proposals"] });
     },
   });
