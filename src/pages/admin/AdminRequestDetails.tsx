@@ -810,7 +810,7 @@ export default function AdminRequestDetails() {
                         {delivery.notes && <p className="text-sm">{delivery.notes}</p>}
                         {delivery.delivery_links && (delivery.delivery_links as any[]).length > 0 && (
                           <div className="mt-2">
-                            <DeliveryLinksDisplay links={delivery.delivery_links as DeliveryLink[]} />
+                            <DeliveryLinksDisplay links={delivery.delivery_links as unknown as DeliveryLink[]} />
                           </div>
                         )}
                         <p className="text-xs text-muted-foreground mt-2">
