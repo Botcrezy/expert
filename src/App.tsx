@@ -123,6 +123,7 @@ const AdminNotificationRules = lazy(() => import("./pages/admin/AdminNotificatio
 const AdminFixedAgreements = lazy(() => import("./pages/admin/AdminFixedAgreements"));
 const AdminPortfolios = lazy(() => import("./pages/admin/AdminPortfolios"));
 const AdminProposals = lazy(() => import("./pages/admin/AdminProposals"));
+const AdminAIRequests = lazy(() => import("./pages/admin/AdminAIRequests"));
 
 // Freelancer pages
 const FreelancerLogin = lazy(() => import("./pages/freelancer/FreelancerLogin"));

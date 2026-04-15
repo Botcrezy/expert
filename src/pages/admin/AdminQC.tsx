@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { FilePreview } from "@/components/files/FilePreview";
+import { DeliveryLinksDisplay, type DeliveryLink } from "@/components/delivery/DeliveryLinksInput";
 import {
   Table,
   TableBody,
@@ -304,6 +305,14 @@ export default function AdminQC() {
                 </div>
               )}
 
+              {/* Delivery Links */}
+              {selectedDelivery.delivery_links && (selectedDelivery.delivery_links as any[]).length > 0 && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-3">روابط التسليم</p>
+                  <DeliveryLinksDisplay links={selectedDelivery.delivery_links as DeliveryLink[]} />
+                </div>
+              )}
+
               {/* Files */}
               <div>
                 <p className="text-sm text-muted-foreground mb-3">الملفات المرفقة</p>
@@ -319,7 +328,9 @@ export default function AdminQC() {
                     title="ملفات التسليم"
                   />
                 ) : (
-                  <p className="text-muted-foreground">لا توجد ملفات</p>
+                  !selectedDelivery.delivery_links || (selectedDelivery.delivery_links as any[]).length === 0 ? (
+                    <p className="text-muted-foreground">لا توجد ملفات أو روابط</p>
+                  ) : null
                 )}
               </div>
 
