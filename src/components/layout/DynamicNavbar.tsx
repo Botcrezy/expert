@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import platformLogo from "@/assets/logo.jpg";
 import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown, Sun, Moon } from "lucide-react";
 import { forwardRef, useEffect, useState } from "react";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
@@ -152,21 +153,13 @@ export const DynamicNavbar = forwardRef<HTMLElement, Record<string, never>>(func
           {/* Logo */}
           {showLogo && (
             <Link to="/" className="flex items-center gap-3 group">
-              {settings?.logoUrl ? (
-                <img
-                  src={settings.logoUrl}
-                  alt={settings.siteName}
-                  className="w-10 h-10 rounded-xl object-contain transition-transform duration-300 group-hover:scale-110"
-                  decoding="async"
-                  loading="eager"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-primary to-accent flex items-center justify-center shadow-lg shadow-primary/25 transition-transform duration-300 group-hover:scale-110">
-                  <span className="text-primary-foreground font-bold text-lg">
-                    {settings?.siteName?.charAt(0) || "S"}
-                  </span>
-                </div>
-              )}
+              <img
+                src={settings?.logoUrl || platformLogo}
+                alt={settings?.siteName || "Sity Experts"}
+                className="w-10 h-10 rounded-xl object-contain transition-transform duration-300 group-hover:scale-110"
+                decoding="async"
+                loading="eager"
+              />
               <span className={cn(
                 "font-bold text-lg transition-colors duration-300",
                 shouldShowSolid ? "text-foreground" : "text-foreground"
