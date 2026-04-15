@@ -117,6 +117,7 @@ const menuItems = [
     group: "النظام",
     items: [
       { title: "التقارير", url: "/admin/reports", icon: BarChart3 },
+      { title: "تقارير الفريلانسرز", url: "/admin/freelancer-reports", icon: Users },
       { title: "مركز الأكشنز", url: "/admin/action-center", icon: Activity },
       { title: "الإشعارات", url: "/admin/notifications", icon: Bell },
       { title: "قواعد الإشعارات", url: "/admin/notification-rules", icon: Shield },
