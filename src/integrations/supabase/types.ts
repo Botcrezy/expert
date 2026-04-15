@@ -169,6 +169,60 @@ export type Database = {
           },
         ]
       }
+      ai_qc_results: {
+        Row: {
+          checks: Json | null
+          created_at: string
+          delivery_id: string
+          freelancer_id: string
+          id: string
+          request_id: string
+          reviewed_by_admin: boolean
+          score: number | null
+          summary: string | null
+          updated_at: string
+        }
+        Insert: {
+          checks?: Json | null
+          created_at?: string
+          delivery_id: string
+          freelancer_id: string
+          id?: string
+          request_id: string
+          reviewed_by_admin?: boolean
+          score?: number | null
+          summary?: string | null
+          updated_at?: string
+        }
+        Update: {
+          checks?: Json | null
+          created_at?: string
+          delivery_id?: string
+          freelancer_id?: string
+          id?: string
+          request_id?: string
+          reviewed_by_admin?: boolean
+          score?: number | null
+          summary?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_qc_results_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_qc_results_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_support_tickets: {
         Row: {
           conversation_id: string
@@ -2921,6 +2975,72 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      recurring_requests: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description: string | null
+          frequency: string
+          id: string
+          is_active: boolean
+          last_run_at: string | null
+          next_run_at: string
+          run_count: number
+          source_request_id: string | null
+          task_size: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          frequency?: string
+          id?: string
+          is_active?: boolean
+          last_run_at?: string | null
+          next_run_at: string
+          run_count?: number
+          source_request_id?: string | null
+          task_size?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          frequency?: string
+          id?: string
+          is_active?: boolean
+          last_run_at?: string | null
+          next_run_at?: string
+          run_count?: number
+          source_request_id?: string | null
+          task_size?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recurring_requests_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recurring_requests_source_request_id_fkey"
+            columns: ["source_request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       referral_rewards: {
         Row: {

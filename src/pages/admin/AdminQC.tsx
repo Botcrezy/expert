@@ -31,7 +31,9 @@ import {
   ClipboardCheck,
   FileText,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
@@ -56,7 +58,8 @@ export default function AdminQC() {
   const queryClient = useQueryClient();
   const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
   const [qcNotes, setQcNotes] = useState("");
-
+  const [aiQcResult, setAiQcResult] = useState<any>(null);
+  const [isRunningAiQc, setIsRunningAiQc] = useState(false);
   const { data: deliveries, isLoading } = useQuery({
     queryKey: ["admin-qc-deliveries"],
     queryFn: async () => {
@@ -123,6 +126,22 @@ export default function AdminQC() {
   const getRequest = (requestId: string) => requests?.find(r => r.id === requestId);
   const getProfile = (userId: string) => profiles?.find(p => p.user_id === userId);
 
+  const runAiQc = async (deliveryId: string) => {
+    setIsRunningAiQc(true);
+    setAiQcResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-qc-check", {
+        body: { deliveryId },
+      });
+      if (error) throw error;
+      setAiQcResult(data.result);
+      toast({ title: "تم فحص الجودة بالذكاء الاصطناعي ✅" });
+    } catch (err: any) {
+      toast({ title: "خطأ في فحص AI", description: err.message, variant: "destructive" });
+    } finally {
+      setIsRunningAiQc(false);
+    }
+  };
   const handleApprove = () => {
     if (!selectedDelivery) return;
     reviewMutation.mutate({
@@ -331,6 +350,51 @@ export default function AdminQC() {
                   !selectedDelivery.delivery_links || (selectedDelivery.delivery_links as any[]).length === 0 ? (
                     <p className="text-muted-foreground">لا توجد ملفات أو روابط</p>
                   ) : null
+                )}
+              </div>
+
+              {/* AI QC Analysis */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">فحص الجودة بالذكاء الاصطناعي</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => runAiQc(selectedDelivery.id)}
+                    disabled={isRunningAiQc}
+                  >
+                    {isRunningAiQc ? (
+                      <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4 ml-2" />
+                    )}
+                    فحص AI
+                  </Button>
+                </div>
+                {aiQcResult && (
+                  <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">النتيجة</span>
+                      <Badge variant={aiQcResult.score >= 60 ? "default" : "destructive"}>
+                        {aiQcResult.score}/100
+                      </Badge>
+                    </div>
+                    {aiQcResult.summary && (
+                      <p className="text-sm text-muted-foreground">{aiQcResult.summary}</p>
+                    )}
+                    {aiQcResult.checks && (
+                      <div className="space-y-1">
+                        {(aiQcResult.checks as any[]).map((c: any, i: number) => (
+                          <div key={i} className="flex items-center gap-2 text-sm">
+                            <span className={c.status === "pass" ? "text-primary" : c.status === "warn" ? "text-warning" : "text-destructive"}>
+                              {c.status === "pass" ? "✓" : c.status === "warn" ? "⚠" : "✗"}
+                            </span>
+                            <span>{c.name}: {c.details}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
 

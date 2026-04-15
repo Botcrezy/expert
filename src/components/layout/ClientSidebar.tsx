@@ -35,6 +35,7 @@ import {
   Package,
   Heart,
   BarChart3,
+  RefreshCw,
 } from "lucide-react";
 
 const menuItems = [
@@ -47,6 +48,7 @@ const menuItems = [
       { title: "خدماتي المشتراة", url: "/client/purchased-services", icon: Package },
       { title: "ملفاتي", url: "/client/files", icon: FileStack },
       { title: "مفضلاتي", url: "/client/favorites", icon: Heart },
+      { title: "طلبات متكررة", url: "/client/recurring", icon: RefreshCw },
       { title: "التحليلات", url: "/client/analytics", icon: BarChart3 },
     ]
   },

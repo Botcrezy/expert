@@ -127,8 +127,9 @@ const AdminPortfolios = lazy(() => import("./pages/admin/AdminPortfolios"));
 const AdminProposals = lazy(() => import("./pages/admin/AdminProposals"));
 const AdminAIRequests = lazy(() => import("./pages/admin/AdminAIRequests"));
 const AdminRequestTemplates = lazy(() => import("./pages/admin/AdminRequestTemplates"));
+const AdminFreelancerReports = lazy(() => import("./pages/admin/AdminFreelancerReports"));
+const ClientRecurringRequests = lazy(() => import("./pages/client/ClientRecurringRequests"));
 
-// Freelancer pages
 const FreelancerLogin = lazy(() => import("./pages/freelancer/FreelancerLogin"));
 const FreelancerDashboard = lazy(() => import("./pages/freelancer/FreelancerDashboard"));
 const FreelancerTasks = lazy(() => import("./pages/freelancer/FreelancerTasks"));
@@ -441,6 +442,17 @@ const App = () => (
                 }
               />
 
+              <Route
+                path="/client/recurring"
+                element={
+                  <ProtectedRoute allowedRoles={["client"]}>
+                    <VerificationGuard userType="client">
+                      <ClientRecurringRequests />
+                    </VerificationGuard>
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Admin Routes - Protected */}
               <Route
                 path="/admin"
@@ -719,6 +731,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={["admin", "team_leader"]}>
                     <AdminReports />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/freelancer-reports"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "team_leader"]}>
+                    <AdminFreelancerReports />
                   </ProtectedRoute>
                 }
               />
