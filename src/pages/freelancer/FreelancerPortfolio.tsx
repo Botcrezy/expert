@@ -44,10 +44,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  PortfolioMediaUploader,
-  type PortfolioMediaItem,
-} from "@/components/portfolio/PortfolioMediaUploader";
+import type { PortfolioMediaItem } from "@/components/portfolio/PortfolioMediaUploader";
+import { GoogleDriveImageInput } from "@/components/portfolio/GoogleDriveImageInput";
 import { FreelancerPortfolioProfileCard } from "@/components/freelancer/FreelancerPortfolioProfileCard";
 import { useTableSubscription } from "@/hooks/useRealtimeSubscription";
 
@@ -955,9 +953,20 @@ export default function FreelancerPortfolio() {
                     }}
                   >
                     <CardContent className="p-4">
-                      <div className="aspect-video bg-muted rounded-lg mb-3 flex items-center justify-center">
-                        <ImageIcon className="w-8 h-8 text-muted-foreground" />
-                      </div>
+                      {(() => {
+                        const imgs = Array.isArray(project.images) ? project.images : [];
+                        const coverImg = imgs.find((i: any) => i?.isCover) || imgs[0];
+                        const imgUrl = coverImg?.url;
+                        return imgUrl ? (
+                          <div className="aspect-video rounded-lg mb-3 overflow-hidden bg-muted">
+                            <img src={imgUrl} alt={project.title} className="w-full h-full object-cover" />
+                          </div>
+                        ) : (
+                          <div className="aspect-video bg-muted rounded-lg mb-3 flex items-center justify-center">
+                            <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                          </div>
+                        );
+                      })()}
                       <h4 className="font-semibold mb-1">{project.title}</h4>
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{project.description}</p>
                       <div className="flex items-center justify-between">
@@ -1150,19 +1159,16 @@ export default function FreelancerPortfolio() {
                 />
               </div>
 
-              <PortfolioMediaUploader
-                label="صور العمل (مع اختيار غلاف)"
-                folder="portfolio/projects"
-                accept="image/*"
+              <GoogleDriveImageInput
+                label="صور العمل (مع اختيار غلاف) — روابط Google Drive أو روابط مباشرة"
                 initialItems={projectForm.images}
                 onChange={(items) => setProjectForm((p) => ({ ...p, images: items }))}
               />
 
-              <PortfolioMediaUploader
-                label="ملفات مرفقة (اختياري)"
-                folder="portfolio/project-attachments"
-                accept=".pdf,.zip,.rar,image/*"
+              <GoogleDriveImageInput
+                label="ملفات مرفقة (اختياري) — روابط"
                 allowCover={false}
+                imageOnly={false}
                 initialItems={projectForm.attachments}
                 onChange={(items) => setProjectForm((p) => ({ ...p, attachments: items }))}
               />
@@ -1365,19 +1371,16 @@ export default function FreelancerPortfolio() {
                 />
               </div>
 
-              <PortfolioMediaUploader
-                label="صور الخدمة (مع اختيار غلاف)"
-                folder="portfolio/services"
-                accept="image/*"
+              <GoogleDriveImageInput
+                label="صور الخدمة (مع اختيار غلاف) — روابط Google Drive أو روابط مباشرة"
                 initialItems={serviceForm.images}
                 onChange={(items) => setServiceForm((s) => ({ ...s, images: items }))}
               />
 
-              <PortfolioMediaUploader
-                label="ملفات مرفقة (اختياري)"
-                folder="portfolio/service-attachments"
-                accept=".pdf,.zip,.rar,image/*"
+              <GoogleDriveImageInput
+                label="ملفات مرفقة (اختياري) — روابط"
                 allowCover={false}
+                imageOnly={false}
                 initialItems={serviceForm.attachments}
                 onChange={(items) => setServiceForm((s) => ({ ...s, attachments: items }))}
               />
@@ -1572,13 +1575,9 @@ export default function FreelancerPortfolio() {
             </DialogHeader>
 
             <div className="space-y-4">
-              <PortfolioMediaUploader
-                label="صورة الغلاف"
-                bucket="portfolio-assets"
-                folder="covers"
-                accept="image/*"
-                maxFiles={1}
-                maxSizeMb={10}
+              <GoogleDriveImageInput
+                label="صورة الغلاف — رابط Google Drive أو رابط مباشر"
+                maxItems={1}
                 allowCover={false}
                 initialItems={coverImage}
                 onChange={(items) => setCoverImage(items)}
