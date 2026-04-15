@@ -1,78 +1,120 @@
 
 
-# خطة: عرض الروابط في Admin + مولد عروض بالذكاء الاصطناعي + ملاحظات للفريلانسر
+# خطة تنفيذ 8 ميزات رئيسية لمنصة Sity Experts
 
-## ملخص
-3 محاور: (1) عرض delivery_links في صفحات الـ Admin (QC + تفاصيل الطلب)، (2) مولد عروض marketplace وهمية بالذكاء الاصطناعي للـ Admin، (3) إضافة ملاحظات وإرشادات للفريلانسر.
-
----
-
-## 1. عرض روابط التسليم في لوحة الـ Admin
-
-### تعديل `AdminQC.tsx`:
-- في Review Dialog (سطر 307-323)، إضافة عرض `delivery_links` باستخدام `DeliveryLinksDisplay` بجانب عرض الملفات الحالي
-- الـ Admin يشوف نوع كل رابط (Drive/GitHub/YouTube) مع زر فتح مباشر
-
-### تعديل `AdminRequestDetails.tsx`:
-- في قسم التسليمات، عرض الروابط المرفقة بنفس الطريقة
+هذه خطة شاملة لتنفيذ الميزات المطلوبة على مراحل. كل مرحلة مستقلة ويمكن تنفيذها بالترتيب.
 
 ---
 
-## 2. مولد عروض Marketplace بالذكاء الاصطناعي
+## المرحلة 1: نظام المراسلة المتقدم (Chat مع ملفات وصور)
 
-### Edge Function جديدة `generate-fake-requests`:
-- تستقبل عدد العروض المطلوبة (مثلاً 4)
-- تستدعي Lovable AI Gateway لتوليد عروض متنوعة
-- كل عرض يحتوي على: عنوان، وصف تفصيلي، ميزانية (6,000 - 14,000 ج.م)، حجم، تصنيف، أمثلة وروابط مشابهة
-- تدخل العروض مباشرة في جدول `requests` بـ `publish_mode = 'marketplace'` و `status = 'submitted'`
-- يتم إنشاء user وهمي أو استخدام حساب Admin كـ owner
+**الوضع الحالي:** يوجد ChatBox يدعم رسائل نصية فقط مع حقل `attachments` (jsonb) في جدول `messages` لكنه غير مُفعّل في الواجهة.
 
-### صفحة Admin جديدة أو قسم في Dashboard:
-- زر "توليد عروض بالذكاء الاصطناعي" مع اختيار العدد (1-10)
-- عرض نتيجة التوليد (العروض المولدة) قبل النشر أو بعده
-- إضافة رابط في `AdminSidebar`
+**المطلوب:**
+- تفعيل رفع الصور والملفات داخل الشات عبر Storage bucket `chat-attachments`
+- عرض معاينة الصور والملفات المرفقة داخل فقاعات الرسائل
+- دعم تسجيل صوتي (Web Audio API) ورفعه كملف
+- تحديث `ChatBox.tsx` و `useMessages.tsx` لدعم المرفقات
 
-### تعديل `AdminSidebar.tsx`:
-- إضافة عنصر جديد "مولد العروض" مع أيقونة Sparkles
+**قاعدة البيانات:** إنشاء Storage bucket `chat-attachments` مع RLS policies
 
 ---
 
-## 3. ملاحظات وإرشادات للفريلانسر
+## المرحلة 2: نظام الطلبات المتكررة (Recurring Requests)
 
-### تعديل `FreelancerTaskDetails.tsx`:
-- إضافة Alert box بملاحظات مهمة:
-  - "يجب أن تكون روابط Google Drive عامة"
-  - "لو العميل مش مديك تفاصيل كافية، اشتغل بإبداعك وسلم حاجة احترافية تعبر عن الفكرة"
-  - "قدم شغل بسيط وشيك يوصل الفكرة بطريقة كويسة"
-
-### تعديل `FreelancerProposalDetails.tsx`:
-- نفس الملاحظات + إضافة:
-  - "لو التفاصيل قليلة، نفذ رؤيتك المهنية مع الحفاظ على البساطة والاحترافية"
+**المطلوب:**
+- جدول جديد `recurring_requests` يحتوي على: `user_id`, `category_id`, `title`, `description`, `size`, `frequency` (weekly/monthly), `next_run_at`, `is_active`, `template_data` (jsonb)
+- صفحة إدارة الطلبات المتكررة للعميل
+- Edge Function `process-recurring-requests` تعمل بـ pg_cron لإنشاء الطلبات تلقائياً
+- زر "تكرار هذا الطلب" في صفحة تفاصيل الطلب
 
 ---
 
-## التفاصيل التقنية
+## المرحلة 3: قوالب الطلبات الجاهزة (Request Templates)
 
-### Edge Function (`supabase/functions/generate-fake-requests/index.ts`):
-- تستخدم `LOVABLE_API_KEY` + Lovable AI Gateway
-- Tool calling لاستخراج JSON منظم
-- تجلب التصنيفات من DB لتوزيع العروض عليها
-- الميزانيات عشوائية بين 6,000 و 14,000 ج.م
-- تضيف أمثلة وروابط مواقع/تطبيقات مشابهة في الوصف
+**المطلوب:**
+- جدول `request_templates`: `id`, `name`, `name_ar`, `category_id`, `description_template`, `size`, `is_active`, `sort_order`
+- إدارة القوالب من لوحة الأدمن (`AdminRequestTemplates`)
+- دمج القوالب في صفحة `CreateRequest.tsx` كخطوة اختيارية قبل اختيار التصنيف
+- ملء البيانات تلقائياً عند اختيار قالب
 
-### صفحة Admin جديدة (`src/pages/admin/AdminAIRequests.tsx`):
-- واجهة بسيطة: عدد + زر توليد + عرض النتائج
-- Route جديد في `App.tsx`
+---
 
-### الملفات المعدلة:
-- `src/pages/admin/AdminQC.tsx` — عرض delivery_links
-- `src/pages/admin/AdminRequestDetails.tsx` — عرض delivery_links
-- `src/pages/freelancer/FreelancerTaskDetails.tsx` — ملاحظات
-- `src/pages/freelancer/FreelancerProposalDetails.tsx` — ملاحظات
-- `src/components/layout/AdminSidebar.tsx` — رابط جديد
-- `src/App.tsx` — Route جديد
+## المرحلة 4: نظام المفضلات (Favorites)
 
-### الملفات الجديدة:
-- `supabase/functions/generate-fake-requests/index.ts`
-- `src/pages/admin/AdminAIRequests.tsx`
+**المطلوب:**
+- جدول `favorite_freelancers`: `id`, `user_id`, `freelancer_id`, `created_at`
+- زر قلب/نجمة في بروفايل الفريلانسر وفي الـ Marketplace
+- صفحة "فريلانسرز مفضلين" في لوحة العميل
+- إمكانية اختيار فريلانسر مفضل مباشرة عند إنشاء طلب جديد (ربط مع `preferred_freelancer_id`)
+
+---
+
+## المرحلة 5: Dashboard تحليلي متقدم للعميل
+
+**المطلوب:**
+- تطوير `ClientDashboard.tsx` بإضافة:
+  - إجمالي الإنفاق (من credits_ledger)
+  - متوسط وقت التسليم (من requests: created_at → completed)
+  - أكثر التصنيفات طلباً (تجميع حسب category_id)
+  - رسم بياني للطلبات شهرياً (recharts)
+  - معدل الرضا (من التقييمات إن وجدت)
+- لا حاجة لجداول جديدة — كل البيانات متاحة من الجداول الحالية
+
+---
+
+## المرحلة 6: توصيات فريلانسر بالذكاء الاصطناعي
+
+**المطلوب:**
+- Edge Function `suggest-freelancer-assignment` (موجودة بالفعل) — تحديثها لاستخدام Lovable AI Gateway
+- عند إنشاء طلب أو موافقة الأدمن عليه، استدعاء الـ AI لاقتراح أفضل فريلانسر بناءً على:
+  - تخصص الفريلانسر (skills)
+  - التقييم (rating/stars)
+  - التوفر (is_available)
+  - عدد المهام الحالية
+- عرض الاقتراح في لوحة الأدمن مع زر "تعيين المقترح"
+
+---
+
+## المرحلة 7: تحليل جودة التسليمات بالـ AI
+
+**المطلوب:**
+- Edge Function `ai-qc-check` تستقبل معلومات التسليم وتحلل:
+  - هل الملفات المرفقة مطابقة للمطلوب (عدد، نوع)
+  - تحليل نصي للوصف مقابل التسليم
+- عرض نتيجة الفحص في صفحة QC للأدمن (`AdminQC.tsx`)
+- جدول `ai_qc_results`: `delivery_id`, `score`, `issues` (jsonb), `checked_at`
+
+---
+
+## المرحلة 8: تقارير أداء الفريلانسر
+
+**المطلوب:**
+- صفحة `FreelancerPerformanceReport` في لوحة الأدمن
+- حساب تلقائي من البيانات الحالية:
+  - عدد المهام المكتملة شهرياً
+  - متوسط وقت الاستجابة (من assignment → أول delivery)
+  - معدل القبول من أول مرة vs المراجعات
+  - معدل رضا العملاء
+- تصدير التقرير كـ PDF
+- إمكانية إرسال التقرير للفريلانسر عبر إشعار
+
+---
+
+## ملخص التغييرات التقنية
+
+| المرحلة | جداول جديدة | Edge Functions | صفحات جديدة |
+|---------|-------------|----------------|-------------|
+| 1. الشات | Storage bucket | — | — (تعديل ChatBox) |
+| 2. المتكررة | `recurring_requests` | `process-recurring-requests` | صفحة إدارة |
+| 3. القوالب | `request_templates` | — | صفحة أدمن + تعديل CreateRequest |
+| 4. المفضلات | `favorite_freelancers` | — | صفحة مفضلات + تعديلات |
+| 5. التحليلات | — | — | تطوير ClientDashboard |
+| 6. توصيات AI | — | تعديل existing | تعديل AdminRequestDetails |
+| 7. QC بالـ AI | `ai_qc_results` | `ai-qc-check` | تعديل AdminQC |
+| 8. تقارير | — | — | صفحة جديدة |
+
+**الترتيب المقترح:** نبدأ بالمراحل 3 → 4 → 1 → 5 (الأسرع والأكثر تأثيراً)، ثم 2 → 6 → 7 → 8.
+
+هل توافق على البدء بهذا الترتيب أم تفضل ترتيب مختلف؟
 
