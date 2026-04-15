@@ -126,7 +126,23 @@ export default function AdminQC() {
   const getRequest = (requestId: string) => requests?.find(r => r.id === requestId);
   const getProfile = (userId: string) => profiles?.find(p => p.user_id === userId);
 
-  const handleApprove = () => {
+  const runAiQc = async (deliveryId: string) => {
+    setIsRunningAiQc(true);
+    setAiQcResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-qc-check", {
+        body: { deliveryId },
+      });
+      if (error) throw error;
+      setAiQcResult(data.result);
+      toast({ title: "تم فحص الجودة بالذكاء الاصطناعي ✅" });
+    } catch (err: any) {
+      toast({ title: "خطأ في فحص AI", description: err.message, variant: "destructive" });
+    } finally {
+      setIsRunningAiQc(false);
+    }
+  };
+
     if (!selectedDelivery) return;
     reviewMutation.mutate({
       deliveryId: selectedDelivery.id,
