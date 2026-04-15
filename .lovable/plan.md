@@ -1,35 +1,78 @@
-# خطة: تنظيف التخزين + نظام تسليم بالروابط + تحسين عروض الفريلانسر
+
+
+# خطة: عرض الروابط في Admin + مولد عروض بالذكاء الاصطناعي + ملاحظات للفريلانسر
 
 ## ملخص
-
-4 محاور رئيسية: (1) مسح جميع ملفات Storage Buckets، (2) تحويل نظام التسليم من رفع ملفات إلى روابط (Google Drive / GitHub / YouTube)، (3) إضافة صفحة تفاصيل المشروع من داخل عروض الفريلانسر مع إمكانية التسليم بالروابط، (4) تحديث نظام تسليم المهام التدريبية ليدعم نفس آلية الروابط.
+3 محاور: (1) عرض delivery_links في صفحات الـ Admin (QC + تفاصيل الطلب)، (2) مولد عروض marketplace وهمية بالذكاء الاصطناعي للـ Admin، (3) إضافة ملاحظات وإرشادات للفريلانسر.
 
 ---
 
-## 1. تنظيف Storage Buckets
+## 1. عرض روابط التسليم في لوحة الـ Admin
 
-- استدعاء Edge Function `cleanup-training-files` الموجودة فعلاً لمسح bucket `identity-documents`
-- إنشاء سكريبت مؤقت يمسح محتويات جميع الـ buckets الثمانية: , `brand-assets`, `course-resources`, `deliveries`, `identity-documents`, , `request-files`, `training-files`
-- لن يتم حذف الـ buckets نفسها، فقط الملفات بداخلها
+### تعديل `AdminQC.tsx`:
+- في Review Dialog (سطر 307-323)، إضافة عرض `delivery_links` باستخدام `DeliveryLinksDisplay` بجانب عرض الملفات الحالي
+- الـ Admin يشوف نوع كل رابط (Drive/GitHub/YouTube) مع زر فتح مباشر
 
-## 2. نظام التسليم بالروابط (بدلاً من رفع الملفات)
+### تعديل `AdminRequestDetails.tsx`:
+- في قسم التسليمات، عرض الروابط المرفقة بنفس الطريقة
 
-### التغيير في قاعدة البيانات:
+---
 
-- إضافة عمود `delivery_links jsonb DEFAULT '[]'` في جدول `deliveries` لتخزين الروابط
+## 2. مولد عروض Marketplace بالذكاء الاصطناعي
+
+### Edge Function جديدة `generate-fake-requests`:
+- تستقبل عدد العروض المطلوبة (مثلاً 4)
+- تستدعي Lovable AI Gateway لتوليد عروض متنوعة
+- كل عرض يحتوي على: عنوان، وصف تفصيلي، ميزانية (6,000 - 14,000 ج.م)، حجم، تصنيف، أمثلة وروابط مشابهة
+- تدخل العروض مباشرة في جدول `requests` بـ `publish_mode = 'marketplace'` و `status = 'submitted'`
+- يتم إنشاء user وهمي أو استخدام حساب Admin كـ owner
+
+### صفحة Admin جديدة أو قسم في Dashboard:
+- زر "توليد عروض بالذكاء الاصطناعي" مع اختيار العدد (1-10)
+- عرض نتيجة التوليد (العروض المولدة) قبل النشر أو بعده
+- إضافة رابط في `AdminSidebar`
+
+### تعديل `AdminSidebar.tsx`:
+- إضافة عنصر جديد "مولد العروض" مع أيقونة Sparkles
+
+---
+
+## 3. ملاحظات وإرشادات للفريلانسر
 
 ### تعديل `FreelancerTaskDetails.tsx`:
+- إضافة Alert box بملاحظات مهمة:
+  - "يجب أن تكون روابط Google Drive عامة"
+  - "لو العميل مش مديك تفاصيل كافية، اشتغل بإبداعك وسلم حاجة احترافية تعبر عن الفكرة"
+  - "قدم شغل بسيط وشيك يوصل الفكرة بطريقة كويسة"
 
-- **إزالة** `FileUploadAdvanced` من نموذج التسليم
-- **إضافة** نظام إدخال روابط متعددة بأنواعها:
-  - Google Drive (مع ملاحظة "يجب أن يكون الرابط عام")
-  - GitHub Repository (مع ملاحظة "يجب أن يكون المستودع عام")
-  - YouTube (مع ملاحظة "فيديو توضيحي - يمكن أن يكون غير مدرج")
-  - رابط آخر
-- كل رابط يُخزن كـ `{ type: "gdrive"|"github"|"youtube"|"other", url: string, label?: string }`
-- إضافة تنبيه واضح: "⚠️ يجب أن تكون جميع الروابط عامة أو قابلة للوصول من قبل فريق المراجعة"
+### تعديل `FreelancerProposalDetails.tsx`:
+- نفس الملاحظات + إضافة:
+  - "لو التفاصيل قليلة، نفذ رؤيتك المهنية مع الحفاظ على البساطة والاحترافية"
 
-### تعديل `FreelancerTraining.tsx`:
+---
 
-- نفس التغيير: استبدال رفع الملفات بنظام الروابط
-- الاحتفاظ بد
+## التفاصيل التقنية
+
+### Edge Function (`supabase/functions/generate-fake-requests/index.ts`):
+- تستخدم `LOVABLE_API_KEY` + Lovable AI Gateway
+- Tool calling لاستخراج JSON منظم
+- تجلب التصنيفات من DB لتوزيع العروض عليها
+- الميزانيات عشوائية بين 6,000 و 14,000 ج.م
+- تضيف أمثلة وروابط مواقع/تطبيقات مشابهة في الوصف
+
+### صفحة Admin جديدة (`src/pages/admin/AdminAIRequests.tsx`):
+- واجهة بسيطة: عدد + زر توليد + عرض النتائج
+- Route جديد في `App.tsx`
+
+### الملفات المعدلة:
+- `src/pages/admin/AdminQC.tsx` — عرض delivery_links
+- `src/pages/admin/AdminRequestDetails.tsx` — عرض delivery_links
+- `src/pages/freelancer/FreelancerTaskDetails.tsx` — ملاحظات
+- `src/pages/freelancer/FreelancerProposalDetails.tsx` — ملاحظات
+- `src/components/layout/AdminSidebar.tsx` — رابط جديد
+- `src/App.tsx` — Route جديد
+
+### الملفات الجديدة:
+- `supabase/functions/generate-fake-requests/index.ts`
+- `src/pages/admin/AdminAIRequests.tsx`
+
