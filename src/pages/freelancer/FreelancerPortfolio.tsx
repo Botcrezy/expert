@@ -44,10 +44,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  PortfolioMediaUploader,
-  type PortfolioMediaItem,
-} from "@/components/portfolio/PortfolioMediaUploader";
+import type { PortfolioMediaItem } from "@/components/portfolio/PortfolioMediaUploader";
+import { GoogleDriveImageInput } from "@/components/portfolio/GoogleDriveImageInput";
 import { FreelancerPortfolioProfileCard } from "@/components/freelancer/FreelancerPortfolioProfileCard";
 import { useTableSubscription } from "@/hooks/useRealtimeSubscription";
 
@@ -1150,19 +1148,16 @@ export default function FreelancerPortfolio() {
                 />
               </div>
 
-              <PortfolioMediaUploader
-                label="صور العمل (مع اختيار غلاف)"
-                folder="portfolio/projects"
-                accept="image/*"
+              <GoogleDriveImageInput
+                label="صور العمل (مع اختيار غلاف) — روابط Google Drive أو روابط مباشرة"
                 initialItems={projectForm.images}
                 onChange={(items) => setProjectForm((p) => ({ ...p, images: items }))}
               />
 
-              <PortfolioMediaUploader
-                label="ملفات مرفقة (اختياري)"
-                folder="portfolio/project-attachments"
-                accept=".pdf,.zip,.rar,image/*"
+              <GoogleDriveImageInput
+                label="ملفات مرفقة (اختياري) — روابط"
                 allowCover={false}
+                imageOnly={false}
                 initialItems={projectForm.attachments}
                 onChange={(items) => setProjectForm((p) => ({ ...p, attachments: items }))}
               />
@@ -1365,19 +1360,16 @@ export default function FreelancerPortfolio() {
                 />
               </div>
 
-              <PortfolioMediaUploader
-                label="صور الخدمة (مع اختيار غلاف)"
-                folder="portfolio/services"
-                accept="image/*"
+              <GoogleDriveImageInput
+                label="صور الخدمة (مع اختيار غلاف) — روابط Google Drive أو روابط مباشرة"
                 initialItems={serviceForm.images}
                 onChange={(items) => setServiceForm((s) => ({ ...s, images: items }))}
               />
 
-              <PortfolioMediaUploader
-                label="ملفات مرفقة (اختياري)"
-                folder="portfolio/service-attachments"
-                accept=".pdf,.zip,.rar,image/*"
+              <GoogleDriveImageInput
+                label="ملفات مرفقة (اختياري) — روابط"
                 allowCover={false}
+                imageOnly={false}
                 initialItems={serviceForm.attachments}
                 onChange={(items) => setServiceForm((s) => ({ ...s, attachments: items }))}
               />
@@ -1572,13 +1564,9 @@ export default function FreelancerPortfolio() {
             </DialogHeader>
 
             <div className="space-y-4">
-              <PortfolioMediaUploader
-                label="صورة الغلاف"
-                bucket="portfolio-assets"
-                folder="covers"
-                accept="image/*"
-                maxFiles={1}
-                maxSizeMb={10}
+              <GoogleDriveImageInput
+                label="صورة الغلاف — رابط Google Drive أو رابط مباشر"
+                maxItems={1}
                 allowCover={false}
                 initialItems={coverImage}
                 onChange={(items) => setCoverImage(items)}
