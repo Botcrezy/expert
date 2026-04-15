@@ -353,6 +353,51 @@ export default function AdminQC() {
                 )}
               </div>
 
+              {/* AI QC Analysis */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">فحص الجودة بالذكاء الاصطناعي</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => runAiQc(selectedDelivery.id)}
+                    disabled={isRunningAiQc}
+                  >
+                    {isRunningAiQc ? (
+                      <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4 ml-2" />
+                    )}
+                    فحص AI
+                  </Button>
+                </div>
+                {aiQcResult && (
+                  <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">النتيجة</span>
+                      <Badge variant={aiQcResult.score >= 60 ? "default" : "destructive"}>
+                        {aiQcResult.score}/100
+                      </Badge>
+                    </div>
+                    {aiQcResult.summary && (
+                      <p className="text-sm text-muted-foreground">{aiQcResult.summary}</p>
+                    )}
+                    {aiQcResult.checks && (
+                      <div className="space-y-1">
+                        {(aiQcResult.checks as any[]).map((c: any, i: number) => (
+                          <div key={i} className="flex items-center gap-2 text-sm">
+                            <span className={c.status === "pass" ? "text-primary" : c.status === "warn" ? "text-warning" : "text-destructive"}>
+                              {c.status === "pass" ? "✓" : c.status === "warn" ? "⚠" : "✗"}
+                            </span>
+                            <span>{c.name}: {c.details}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
               {/* QC Notes */}
               <div>
                 <p className="text-sm text-muted-foreground mb-2">ملاحظات المراجعة</p>
