@@ -953,9 +953,20 @@ export default function FreelancerPortfolio() {
                     }}
                   >
                     <CardContent className="p-4">
-                      <div className="aspect-video bg-muted rounded-lg mb-3 flex items-center justify-center">
-                        <ImageIcon className="w-8 h-8 text-muted-foreground" />
-                      </div>
+                      {(() => {
+                        const imgs = Array.isArray(project.images) ? project.images : [];
+                        const coverImg = imgs.find((i: any) => i?.isCover) || imgs[0];
+                        const imgUrl = coverImg?.url;
+                        return imgUrl ? (
+                          <div className="aspect-video rounded-lg mb-3 overflow-hidden bg-muted">
+                            <img src={imgUrl} alt={project.title} className="w-full h-full object-cover" />
+                          </div>
+                        ) : (
+                          <div className="aspect-video bg-muted rounded-lg mb-3 flex items-center justify-center">
+                            <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                          </div>
+                        );
+                      })()}
                       <h4 className="font-semibold mb-1">{project.title}</h4>
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{project.description}</p>
                       <div className="flex items-center justify-between">
