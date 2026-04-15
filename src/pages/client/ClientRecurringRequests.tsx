@@ -62,7 +62,7 @@ export default function ClientRecurringRequests() {
   const { data: taskSizes } = useQuery({
     queryKey: ["task-sizes-recurring"],
     queryFn: async () => {
-      const { data } = await supabase.from("task_sizes").select("id, name_ar, credits").eq("is_active", true).order("sort_order");
+      const { data } = await supabase.from("task_sizes" as any).select("id, name_ar, credits").eq("is_active", true).order("sort_order");
       return data || [];
     },
   });

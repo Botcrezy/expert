@@ -137,7 +137,7 @@ export default function AdminFreelancerReports() {
               </Card>
               <Card>
                 <CardContent className="p-4 text-center">
-                  <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-500" />
+                  <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-primary" />
                   <p className="text-2xl font-bold">
                     {freelancersData?.reduce((s, f) => s + f.completedInPeriod, 0) || 0}
                   </p>
@@ -146,7 +146,7 @@ export default function AdminFreelancerReports() {
               </Card>
               <Card>
                 <CardContent className="p-4 text-center">
-                  <TrendingUp className="w-8 h-8 mx-auto mb-2 text-blue-500" />
+                  <TrendingUp className="w-8 h-8 mx-auto mb-2 text-primary" />
                   <p className="text-2xl font-bold">
                     {freelancersData?.length ? Math.round(freelancersData.reduce((s, f) => s + f.approvalRate, 0) / freelancersData.length) : 0}%
                   </p>
@@ -155,7 +155,7 @@ export default function AdminFreelancerReports() {
               </Card>
               <Card>
                 <CardContent className="p-4 text-center">
-                  <Clock className="w-8 h-8 mx-auto mb-2 text-orange-500" />
+                  <Clock className="w-8 h-8 mx-auto mb-2 text-primary" />
                   <p className="text-2xl font-bold">
                     {freelancersData?.filter(f => f.avgDays > 0).length
                       ? Math.round(freelancersData.filter(f => f.avgDays > 0).reduce((s, f) => s + f.avgDays, 0) / freelancersData.filter(f => f.avgDays > 0).length)
