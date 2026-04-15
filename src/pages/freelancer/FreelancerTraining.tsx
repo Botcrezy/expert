@@ -109,91 +109,7 @@ export default function FreelancerTraining() {
 
   const profile = freelancerProfile;
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || !user || !selectedTask?.id) return;
-
-    setUploadingFile(true);
-    const uploadedFiles: any[] = [];
-    const failedFiles: string[] = [];
-
-    try {
-      for (const file of Array.from(files)) {
-        if (file.type?.startsWith("video/")) {
-          failedFiles.push(`${file.name} (الفيديوهات: ضع رابط Google Drive)`);
-          continue;
-        }
-        if (file.size > 10 * 1024 * 1024) {
-          failedFiles.push(`${file.name} (أكبر من 10MB)`);
-          continue;
-        }
-
-        const filePath = `${user.id}/training/${selectedTask.id}/${crypto.randomUUID?.() || Date.now()}-${file.name}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("training-files")
-          .upload(filePath, file, { upsert: false });
-
-        if (uploadError) {
-          console.error("Upload error:", uploadError);
-          failedFiles.push(`${file.name} (${uploadError.message})`);
-          continue;
-        }
-
-        const { data: signed, error: signedErr } = await supabase.storage
-          .from("training-files")
-          .createSignedUrl(filePath, 60 * 60 * 24 * 7);
-
-        if (signedErr) {
-          console.error("Signed URL error:", signedErr);
-        }
-
-        uploadedFiles.push({
-          name: file.name,
-          path: filePath,
-          bucket: "training-files",
-          url: signed?.signedUrl,
-          type: file.type,
-          size: file.size,
-        });
-      }
-
-      setDeliveryFiles((prev) => [...prev, ...uploadedFiles]);
-
-      if (uploadedFiles.length > 0) {
-        toast({
-          title: `تم رفع ${uploadedFiles.length} ملف بنجاح ✅`,
-          description: failedFiles.length ? `فشل رفع ${failedFiles.length} ملف` : undefined,
-        });
-      } else {
-        toast({
-          title: "لم يتم رفع أي ملف",
-          description: failedFiles.length
-            ? failedFiles.slice(0, 3).join("، ")
-            : "تحقق من صلاحيات رفع الملفات",
-          variant: "destructive",
-        });
-      }
-    } catch (error: any) {
-      toast({ title: "حدث خطأ أثناء الرفع", description: error.message, variant: "destructive" });
-    } finally {
-      setUploadingFile(false);
-      e.target.value = "";
-    }
-  };
-
-  const removeFile = (index: number) => {
-    const file = deliveryFiles[index];
-
-    if (file?.path) {
-      supabase.storage
-        .from(file.bucket || "training-files")
-        .remove([file.path])
-        .catch(() => {});
-    }
-
-    setDeliveryFiles((prev) => prev.filter((_, i) => i !== index));
-  };
+  // File upload removed — all deliveries are now link-based
 
   const acceptTaskMutation = useMutation({
     mutationFn: async (taskId: string) => {
@@ -529,53 +445,21 @@ export default function FreelancerTraining() {
               </div>
             ) : (
               <div className="space-y-2">
-                <label className="text-sm font-medium">الملفات (اختياري)</label>
-                <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
-                  <label className="cursor-pointer">
-                    <input
-                      type="file"
-                      multiple
-                      className="hidden"
-                      onChange={handleFileUpload}
-                      disabled={uploadingFile}
-                    />
-                    {uploadingFile ? (
-                      <Loader2 className="w-8 h-8 text-muted-foreground mx-auto animate-spin" />
-                    ) : (
-                      <Upload className="w-8 h-8 text-muted-foreground mx-auto" />
-                    )}
-                    <p className="mt-2 text-sm font-medium">اضغط لرفع الملفات</p>
-                    <p className="text-xs text-muted-foreground">بحد أقصى 10MB لكل ملف</p>
-                  </label>
+                <label className="text-sm font-medium">روابط التسليم</label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  أضف روابط Google Drive أو GitHub أو YouTube للتسليم. يجب أن تكون الروابط عامة.
+                </p>
+                <div className="space-y-3">
+                  <Input
+                    value={driveLinkInput}
+                    onChange={(e) => setDriveLinkInput(e.target.value)}
+                    placeholder="https://drive.google.com/... أو https://github.com/..."
+                    dir="ltr"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    ⚠️ يجب أن تكون جميع الروابط عامة أو قابلة للوصول من قبل فريق المراجعة
+                  </p>
                 </div>
-                
-                {deliveryFiles.length > 0 && (
-                  <div className="space-y-2 mt-3">
-                    {deliveryFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <File className="w-4 h-4 text-primary" />
-                          <span className="text-sm truncate max-w-[200px]">{file.name}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Button size="icon" variant="ghost" className="h-7 w-7" asChild>
-                            <a href={file.url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </Button>
-                          <Button 
-                            size="icon" 
-                            variant="ghost" 
-                            className="h-7 w-7 text-destructive"
-                            onClick={() => removeFile(index)}
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
 

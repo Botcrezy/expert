@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Clock, DollarSign, Calendar, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   pending: { label: "قيد المراجعة", variant: "secondary" },
@@ -109,11 +110,19 @@ export default function FreelancerProposals() {
                       {new Date(proposal.created_at).toLocaleDateString("ar-EG")}
                     </span>
                   </div>
-                  {proposal.admin_notes && (
-                    <p className="text-xs text-muted-foreground mt-3 bg-muted/50 p-2 rounded">
-                      ملاحظات: {proposal.admin_notes}
-                    </p>
-                  )}
+                    {proposal.admin_notes && (
+                      <p className="text-xs text-muted-foreground mt-3 bg-muted/50 p-2 rounded">
+                        ملاحظات: {proposal.admin_notes}
+                      </p>
+                    )}
+                    <div className="mt-3 flex justify-end">
+                      <Button variant="outline" size="sm" asChild className="gap-2">
+                        <Link to={`/freelancer/proposals/${proposal.id}`}>
+                          <Eye className="w-4 h-4" />
+                          قراءة المزيد
+                        </Link>
+                      </Button>
+                    </div>
                 </CardContent>
               </Card>
             );

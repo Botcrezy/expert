@@ -7,7 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { FreelancerSidebar } from "@/components/layout/FreelancerSidebar";
 import { ChatBox } from "@/components/chat/ChatBox";
-import { FileUploadAdvanced } from "@/components/ui/FileUploadAdvanced";
 import { FilePreview } from "@/components/files/FilePreview";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,8 +17,8 @@ import { RequestBriefCard, type RequestBrief } from "@/components/requests/Reque
 import { Calendar, Clock, Loader2, Upload, CheckCircle2, FolderOpen, MessageCircle, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
-import type { UploadedFile } from "@/hooks/useFileUpload";
 import { useRequestInfo } from "@/hooks/useRequestInfo";
+import { DeliveryLinksInput, DeliveryLinksDisplay, type DeliveryLink } from "@/components/delivery/DeliveryLinksInput";
 
 
 export default function FreelancerTaskDetails() {
@@ -28,7 +27,7 @@ export default function FreelancerTaskDetails() {
   const { toast } = useToast();
 
   const [deliveryNotes, setDeliveryNotes] = useState("");
-  const [deliveryFiles, setDeliveryFiles] = useState<UploadedFile[]>([]);
+  const [deliveryLinks, setDeliveryLinks] = useState<DeliveryLink[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const { data: assignment, isLoading: assignmentLoading, refetch: refetchAssignment } = useQuery({
@@ -174,22 +173,20 @@ export default function FreelancerTaskDetails() {
       return;
     }
     try {
-      const attachments = deliveryFiles
-        .filter((f) => f.progress === 100 && !f.error)
-        .map((f) => ({
-          name: f.name,
-          url: f.url,
-          path: f.path,
-          type: f.type,
-          size: f.size,
-        }));
+      const validLinks = deliveryLinks.filter((l) => l.url.trim());
+      if (validLinks.length === 0) {
+        toast({ title: "يجب إضافة رابط واحد على الأقل", variant: "destructive" });
+        setSubmitting(false);
+        return;
+      }
 
       const { error } = await supabase.from("deliveries").insert({
         assignment_id: assignment.id,
         request_id: requestId,
         freelancer_id: user.id,
         notes: deliveryNotes.trim() || null,
-        files: (attachments as unknown as Json) || null,
+        files: null,
+        delivery_links: validLinks as unknown as Json,
         revision_number: nextRevisionNumber,
         status: "pending",
       });
@@ -234,7 +231,7 @@ export default function FreelancerTaskDetails() {
       });
 
       setDeliveryNotes("");
-      setDeliveryFiles([]);
+      setDeliveryLinks([]);
       await refetchDeliveries();
     } catch (e: any) {
       toast({ title: "تعذر إرسال التسليم", description: e.message, variant: "destructive" });
@@ -451,17 +448,16 @@ export default function FreelancerTaskDetails() {
                      className="min-h-[120px]"
                    />
 
-                   <FileUploadAdvanced
-                     folder={`deliveries/${requestId}/rev-${nextRevisionNumber}`}
-                     onFilesChange={(files) => setDeliveryFiles(files)}
-                     maxFiles={10}
-                     maxSize={50}
-                   />
+                    <DeliveryLinksInput
+                      links={deliveryLinks}
+                      onChange={setDeliveryLinks}
+                      disabled={submitting}
+                    />
 
                    <div className="flex items-center justify-end">
                      <Button
                        onClick={submitDelivery}
-                       disabled={submitting || !assignment.started_at}
+                       disabled={submitting || !assignment.started_at || deliveryLinks.filter(l => l.url.trim()).length === 0}
                        className="gap-2"
                      >
                        {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
@@ -497,20 +493,23 @@ export default function FreelancerTaskDetails() {
                            <div className="text-xs text-muted-foreground">{format(new Date(d.created_at), "d MMM, h:mm a", { locale: ar })}</div>
                          </div>
                          {d.notes && <p className="text-sm text-muted-foreground mt-2 whitespace-pre-wrap">{d.notes}</p>}
-                         {Array.isArray(d.files) && d.files.length > 0 && (
-                           <div className="mt-3">
-                             <FilePreview 
-                               files={(d.files as any[]).map((f: any) => ({
-                                 name: f.name || 'ملف',
-                                 size: f.size,
-                                 type: f.type,
-                                 path: f.path || f.url
-                               }))} 
-                               bucket="request-files"
-                               title="ملفات التسليم"
-                             />
-                           </div>
-                         )}
+                          {d.delivery_links && Array.isArray(d.delivery_links) && d.delivery_links.length > 0 && (
+                            <DeliveryLinksDisplay links={d.delivery_links as DeliveryLink[]} />
+                          )}
+                          {Array.isArray(d.files) && d.files.length > 0 && (
+                            <div className="mt-3">
+                              <FilePreview 
+                                files={(d.files as any[]).map((f: any) => ({
+                                  name: f.name || 'ملف',
+                                  size: f.size,
+                                  type: f.type,
+                                  path: f.path || f.url
+                                }))} 
+                                bucket="request-files"
+                                title="ملفات التسليم"
+                              />
+                            </div>
+                          )}
                        </div>
                      ))}
                    </div>

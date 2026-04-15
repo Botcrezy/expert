@@ -1102,6 +1102,7 @@ export type Database = {
         Row: {
           assignment_id: string
           created_at: string
+          delivery_links: Json | null
           files: Json | null
           freelancer_id: string
           id: string
@@ -1116,6 +1117,7 @@ export type Database = {
         Insert: {
           assignment_id: string
           created_at?: string
+          delivery_links?: Json | null
           files?: Json | null
           freelancer_id: string
           id?: string
@@ -1130,6 +1132,7 @@ export type Database = {
         Update: {
           assignment_id?: string
           created_at?: string
+          delivery_links?: Json | null
           files?: Json | null
           freelancer_id?: string
           id?: string
