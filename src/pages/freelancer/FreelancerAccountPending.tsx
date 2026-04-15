@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
+import platformLogo from "@/assets/logo.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -156,19 +157,11 @@ export default function FreelancerAccountPending() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3">
-              {settings?.logoUrl ? (
-                <img 
-                  src={settings.logoUrl} 
-                  alt={settings?.siteName || "Sity Experts"} 
-                  className="w-10 h-10 rounded-xl object-contain"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-lg">
-                    {settings?.siteName?.charAt(0) || "S"}
-                  </span>
-                </div>
-              )}
+              <img 
+                src={platformLogo} 
+                alt={settings?.siteName || "Sity Experts"} 
+                className="w-10 h-10 rounded-xl object-contain"
+              />
               <span className="font-bold text-xl">{settings?.siteName || "Sity Experts"}</span>
             </Link>
 
