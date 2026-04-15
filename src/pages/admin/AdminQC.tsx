@@ -31,7 +31,9 @@ import {
   ClipboardCheck,
   FileText,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
@@ -56,7 +58,8 @@ export default function AdminQC() {
   const queryClient = useQueryClient();
   const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
   const [qcNotes, setQcNotes] = useState("");
-
+  const [aiQcResult, setAiQcResult] = useState<any>(null);
+  const [isRunningAiQc, setIsRunningAiQc] = useState(false);
   const { data: deliveries, isLoading } = useQuery({
     queryKey: ["admin-qc-deliveries"],
     queryFn: async () => {
