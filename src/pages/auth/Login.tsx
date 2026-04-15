@@ -166,11 +166,7 @@ export default function Login() {
         </div>
 
         <div className="max-w-lg text-center relative z-10">
-          {settings?.logoUrl ? (
-            <img src={platformLogo} alt={settings.siteName} className="w-20 h-20 mx-auto mb-8 object-contain rounded-2xl bg-white/15 p-3 backdrop-blur-sm border border-white/20 shadow-2xl" />
-          ) : (
-            <img src={platformLogo} alt="Sity Experts" className="w-20 h-20 mx-auto mb-8 object-contain rounded-2xl bg-white/15 p-3 backdrop-blur-sm border border-white/20 shadow-2xl" />
-          )}
+          <img src={platformLogo} alt={settings?.siteName || "Sity Experts"} className="w-20 h-20 mx-auto mb-8 object-contain rounded-2xl bg-white/15 p-3 backdrop-blur-sm border border-white/20 shadow-2xl" />
 
           <h2 className="text-3xl xl:text-4xl font-bold mb-4 text-white">{settings?.siteName || "Sity Experts"}</h2>
           <p className="text-lg text-white/85 mb-10 leading-relaxed">منصة خدمات مُدارة تضمن لك جودة التسليم وراحة البال. اطلب خدمتك واستلمها جاهزة.</p>
