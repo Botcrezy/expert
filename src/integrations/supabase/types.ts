@@ -1212,6 +1212,27 @@ export type Database = {
           },
         ]
       }
+      favorite_freelancers: {
+        Row: {
+          created_at: string
+          freelancer_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          freelancer_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          freelancer_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       freelancer_certificates: {
         Row: {
           created_at: string
