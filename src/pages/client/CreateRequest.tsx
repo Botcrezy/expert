@@ -24,7 +24,8 @@ import {
   Crown,
   Upload,
   X,
-  File
+  File,
+  LayoutTemplate
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -142,6 +143,30 @@ export default function CreateRequest() {
       return data || [];
     },
   });
+
+  // Fetch request templates
+  const { data: requestTemplates = [] } = useQuery({
+    queryKey: ["request-templates"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("request_templates")
+        .select("*, categories(name_ar)")
+        .eq("is_active", true)
+        .order("sort_order");
+      return data || [];
+    },
+  });
+
+  const applyTemplate = (template: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      category_id: template.category_id || prev.category_id,
+      title: template.name_ar || template.name,
+      description: template.description_template || "",
+      size: template.size || prev.size,
+    }));
+    toast({ title: `تم تطبيق قالب "${template.name_ar}"` });
+  };
 
   // Fetch user subscription
   const { data: subscription, isLoading: subLoading } = useQuery({
@@ -607,6 +632,31 @@ export default function CreateRequest() {
         {/* Step 1: Category Selection */}
         {currentStep === 0 && (
           <div className="space-y-6">
+            {/* Quick Templates */}
+            {requestTemplates.length > 0 && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <LayoutTemplate className="w-5 h-5 text-primary" />
+                  <h3 className="font-semibold text-foreground">قوالب جاهزة</h3>
+                  <span className="text-xs text-muted-foreground">(اختياري — يملأ البيانات تلقائياً)</span>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {requestTemplates.map((t: any) => (
+                    <button
+                      key={t.id}
+                      onClick={() => applyTemplate(t)}
+                      className="p-4 rounded-xl border border-dashed border-primary/40 hover:border-primary hover:bg-primary/5 text-right transition-all"
+                    >
+                      <p className="font-medium text-sm">{t.name_ar}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {t.categories?.name_ar || "عام"}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <h2 className="text-xl font-semibold text-foreground mb-6">اختر نوع الخدمة</h2>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
