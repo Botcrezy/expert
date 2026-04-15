@@ -124,6 +124,7 @@ const AdminFixedAgreements = lazy(() => import("./pages/admin/AdminFixedAgreemen
 const AdminPortfolios = lazy(() => import("./pages/admin/AdminPortfolios"));
 const AdminProposals = lazy(() => import("./pages/admin/AdminProposals"));
 const AdminAIRequests = lazy(() => import("./pages/admin/AdminAIRequests"));
+const AdminRequestTemplates = lazy(() => import("./pages/admin/AdminRequestTemplates"));
 
 // Freelancer pages
 const FreelancerLogin = lazy(() => import("./pages/freelancer/FreelancerLogin"));
@@ -774,6 +775,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={["admin", "team_leader"]}>
                     <AdminAIRequests />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/request-templates"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <AdminRequestTemplates />
                   </ProtectedRoute>
                 }
               />

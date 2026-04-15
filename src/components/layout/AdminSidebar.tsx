@@ -68,6 +68,7 @@ const menuItems = [
       { title: "الاتفاقات الثابتة", url: "/admin/fixed-agreements", icon: Briefcase },
       { title: "التعيينات", url: "/admin/assignments", icon: UserCheck },
       { title: "مراجعة الجودة", url: "/admin/qc", icon: ClipboardCheck },
+      { title: "قوالب الطلبات", url: "/admin/request-templates", icon: LayoutTemplate },
     ]
   },
   {
