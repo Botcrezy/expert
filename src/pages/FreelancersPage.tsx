@@ -12,6 +12,7 @@ import { Star, Search, CheckCircle2, Briefcase, ExternalLink, Send, Image as Ima
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/seo/SEO";
+import { FavoriteButton } from "@/components/favorites/FavoriteButton";
 import {
   Select,
   SelectContent,
@@ -233,6 +234,9 @@ export default function FreelancersPage() {
                           <span>{stars}</span>
                         </div>
                       )}
+                      <div className="absolute bottom-2 left-2">
+                        <FavoriteButton freelancerId={freelancer.user_id} />
+                      </div>
                       {tier && (
                         <div className={`absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${tier.color}`}>
                           {tier.label}

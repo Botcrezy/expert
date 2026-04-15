@@ -33,6 +33,7 @@ import {
   Shield,
   GraduationCap,
   Package,
+  Heart,
 } from "lucide-react";
 
 const menuItems = [
@@ -44,6 +45,7 @@ const menuItems = [
       { title: "طلباتي", url: "/client/requests", icon: FileText },
       { title: "خدماتي المشتراة", url: "/client/purchased-services", icon: Package },
       { title: "ملفاتي", url: "/client/files", icon: FileStack },
+      { title: "مفضلاتي", url: "/client/favorites", icon: Heart },
     ]
   },
   {

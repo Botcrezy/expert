@@ -61,6 +61,7 @@ const ClientCourseViewer = lazy(() => import("./pages/client/ClientCourseViewer"
 const ClientReferrals = lazy(() => import("./pages/client/ClientReferrals"));
 const ClientBrand = lazy(() => import("./pages/client/ClientBrand"));
 const ClientBrandDetails = lazy(() => import("./pages/client/ClientBrandDetails"));
+const ClientFavorites = lazy(() => import("./pages/client/ClientFavorites"));
 
 // Admin pages
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -412,6 +413,17 @@ const App = () => (
                   <ProtectedRoute allowedRoles={["client"]}>
                     <VerificationGuard userType="client">
                       <ClientCourseViewer />
+                    </VerificationGuard>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/client/favorites"
+                element={
+                  <ProtectedRoute allowedRoles={["client"]}>
+                    <VerificationGuard userType="client">
+                      <ClientFavorites />
                     </VerificationGuard>
                   </ProtectedRoute>
                 }
