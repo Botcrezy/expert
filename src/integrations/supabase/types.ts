@@ -3163,6 +3163,53 @@ export type Database = {
           },
         ]
       }
+      request_templates: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description_template: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          name_ar: string
+          size: string | null
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description_template?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          name_ar: string
+          size?: string | null
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description_template?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          name_ar?: string
+          size?: string | null
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "request_templates_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       requests: {
         Row: {
           admin_notes: string | null
