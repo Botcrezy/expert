@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import platformLogo from "@/assets/logo.jpg";
 import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import {
   Search,

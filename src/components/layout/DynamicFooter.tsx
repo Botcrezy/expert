@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import platformLogo from "@/assets/logo.jpg";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
