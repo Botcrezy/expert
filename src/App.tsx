@@ -442,6 +442,17 @@ const App = () => (
                 }
               />
 
+              <Route
+                path="/client/recurring"
+                element={
+                  <ProtectedRoute allowedRoles={["client"]}>
+                    <VerificationGuard userType="client">
+                      <ClientRecurringRequests />
+                    </VerificationGuard>
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Admin Routes - Protected */}
               <Route
                 path="/admin"
