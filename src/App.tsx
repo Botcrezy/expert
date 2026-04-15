@@ -977,6 +977,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/freelancer/proposals/:id"
+                element={
+                  <ProtectedRoute allowedRoles={["freelancer"]}>
+                    <FreelancerProposalDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 element={
                   <ProtectedRoute allowedRoles={["freelancer"]}>
                     <VerificationGuard userType="freelancer">
