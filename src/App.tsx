@@ -151,6 +151,7 @@ const FreelancerIdentityVerification = lazy(() => import("./pages/freelancer/Fre
 const FreelancerTrackDetails = lazy(() => import("./pages/freelancer/FreelancerTrackDetails"));
 const FreelancerCourseViewer = lazy(() => import("./pages/freelancer/FreelancerCourseViewer"));
 const FreelancerProposals = lazy(() => import("./pages/freelancer/FreelancerProposals"));
+const FreelancerProposalDetails = lazy(() => import("./pages/freelancer/FreelancerProposalDetails"));
 
 const queryClient = new QueryClient();
 
