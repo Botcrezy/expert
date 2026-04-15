@@ -31,7 +31,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           <Link to="/" className="flex items-center gap-3">
             <img 
-              src={settings?.logoUrl || platformLogo} 
+              src={platformLogo} 
               alt={settings?.siteName || "Sity Experts"} 
               className="w-11 h-11 rounded-2xl object-contain"
             />
