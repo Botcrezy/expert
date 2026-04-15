@@ -49,6 +49,7 @@ import {
   ListChecks,
   DollarSign,
   Briefcase,
+  Sparkles,
 } from "lucide-react";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
 
@@ -132,6 +133,7 @@ const menuItems = [
       { title: "السجل الأمني", url: "/admin/security-logs", icon: ShieldCheck },
       { title: "سجل المراقبة", url: "/admin/audit", icon: Shield },
       { title: "مزامنة Supabase", url: "/admin/supabase-sync", icon: Database },
+      { title: "مولد العروض (AI)", url: "/admin/ai-requests", icon: Sparkles },
       { title: "📚 التوثيق", url: "/admin/documentation", icon: ScrollText },
     ]
   },

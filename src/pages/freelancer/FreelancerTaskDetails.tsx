@@ -269,6 +269,19 @@ export default function FreelancerTaskDetails() {
       title={request.title}
       subtitle={request.request_number}
     >
+      {/* Freelancer Guidelines */}
+      <div className="mb-6 p-4 rounded-lg border border-primary/20 bg-primary/5 space-y-2 text-sm">
+        <p className="font-semibold text-primary flex items-center gap-2">
+          <FileText className="w-4 h-4" />
+          ملاحظات مهمة
+        </p>
+        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+          <li>⚠️ يجب أن تكون جميع روابط Google Drive <strong>عامة</strong> (Anyone with the link)</li>
+          <li>لو العميل مش مديك تفاصيل كافية، اشتغل بإبداعك وسلّم حاجة احترافية تعبّر عن الفكرة</li>
+          <li>قدّم شغل بسيط وشيك يوصل الفكرة بطريقة كويسة ومحترفة</li>
+        </ul>
+      </div>
+
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Task Summary */}

@@ -23,6 +23,7 @@ import { AdminChatBox } from "@/components/chat/AdminChatBox";
 import { ProjectTasksManager } from "@/components/admin/ProjectTasksManager";
 import { FileUploadAdvanced } from "@/components/ui/FileUploadAdvanced";
 import { RequestBriefCard, type RequestBrief } from "@/components/requests/RequestBriefCard";
+import { DeliveryLinksDisplay, type DeliveryLink } from "@/components/delivery/DeliveryLinksInput";
 
 // Helper function to safely format dates
 const safeFormatDate = (dateString: string | null | undefined, formatStr: string = "d MMMM yyyy") => {
@@ -807,6 +808,11 @@ export default function AdminRequestDetails() {
                           </Badge>
                         </div>
                         {delivery.notes && <p className="text-sm">{delivery.notes}</p>}
+                        {delivery.delivery_links && (delivery.delivery_links as any[]).length > 0 && (
+                          <div className="mt-2">
+                            <DeliveryLinksDisplay links={delivery.delivery_links as unknown as DeliveryLink[]} />
+                          </div>
+                        )}
                         <p className="text-xs text-muted-foreground mt-2">
                           {safeFormatDate(delivery.created_at, "d MMMM yyyy - h:mm a")}
                         </p>
