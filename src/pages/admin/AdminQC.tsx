@@ -142,7 +142,7 @@ export default function AdminQC() {
       setIsRunningAiQc(false);
     }
   };
-
+  const handleApprove = () => {
     if (!selectedDelivery) return;
     reviewMutation.mutate({
       deliveryId: selectedDelivery.id,
