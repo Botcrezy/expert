@@ -16,10 +16,12 @@ Deno.serve(async (req) => {
   );
 
   const buckets = [
+    "avatars",
     "brand-assets",
     "course-resources",
     "deliveries",
     "identity-documents",
+    "portfolio-assets",
     "request-files",
     "training-files",
   ];
