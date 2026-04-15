@@ -73,11 +73,7 @@ export default function Login() {
       {/* Mobile Header */}
       <div className="lg:hidden p-4 flex items-center justify-between border-b border-border/50 bg-background">
         <Link to="/" className="flex items-center gap-2">
-          {settings?.logoUrl ? (
-            <img src={platformLogo} alt={settings.siteName} className="w-9 h-9 rounded-xl object-contain" />
-          ) : (
-            <img src={platformLogo} alt="Sity Experts" className="w-9 h-9 rounded-xl object-contain" />
-          )}
+          <img src={platformLogo} alt={settings?.siteName || "Sity Experts"} className="w-9 h-9 rounded-xl object-contain" />
           <span className="font-bold text-lg text-foreground">{settings?.siteName || "Sity Experts"}</span>
         </Link>
       </div>
