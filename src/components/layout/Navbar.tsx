@@ -5,6 +5,7 @@ import { useState } from "react";
 import { usePlatformSettings } from "@/hooks/usePlatformSettings";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import platformLogo from "@/assets/logo.jpg";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
