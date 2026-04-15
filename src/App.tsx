@@ -770,6 +770,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/admin/ai-requests"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "team_leader"]}>
+                    <AdminAIRequests />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/payment-collections"
                 element={
                   <ProtectedRoute allowedRoles={["admin"]}>
