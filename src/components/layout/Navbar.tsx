@@ -30,20 +30,12 @@ export function Navbar() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           <Link to="/" className="flex items-center gap-3">
-            {settings?.logoUrl ? (
-              <img 
-                src={settings.logoUrl} 
-                alt={settings.siteName} 
-                className="w-11 h-11 rounded-2xl object-contain"
-              />
-            ) : (
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/25">
-                <span className="text-white font-bold text-xl">
-                  {settings?.siteName?.charAt(0) || "S"}
-                </span>
-              </div>
-            )}
-            <span className="font-bold text-xl text-gray-900">
+            <img 
+              src={settings?.logoUrl || platformLogo} 
+              alt={settings?.siteName || "Sity Experts"} 
+              className="w-11 h-11 rounded-2xl object-contain"
+            />
+            <span className="font-bold text-xl text-foreground">
               {settings?.siteName || "Sity Experts"}
             </span>
           </Link>
