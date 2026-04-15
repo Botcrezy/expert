@@ -154,7 +154,7 @@ export const DynamicNavbar = forwardRef<HTMLElement, Record<string, never>>(func
           {showLogo && (
             <Link to="/" className="flex items-center gap-3 group">
               <img
-                src={settings?.logoUrl || platformLogo}
+                src={platformLogo}
                 alt={settings?.siteName || "Sity Experts"}
                 className="w-10 h-10 rounded-xl object-contain transition-transform duration-300 group-hover:scale-110"
                 decoding="async"
